@@ -32,8 +32,17 @@ Visit: http://127.0.0.1:8000 → {"message":"Hello, DevOps World!"}
 - Created Hello World and echo endpoints
 - Verified app running locally at http://127.0.0.1:8000
 ## Screenshots
-![FastAPI Hello World](docs/screenshots/day1-hello.png)
-![Swagger UI](docs/screenshots/day1-echo.png)
+![FastAPI Hello World](docs/screenshots/hello%20endpoint.png)
+![Swagger UI](docs/screenshots/echo%20endpoint.png)
 
-## Next Steps
-Day 2 → Add Dependency Injection and Background Tasks
+- Implemented Dependency Injection using FastAPI `Depends`
+- Created a fake DB connection dependency
+- Added Background Tasks to simulate async logging
+- Verified endpoints:
+  - `/items/` → shows injected DB connection
+  - `/process/` → triggers background logging while returning instantly
+
+## Screenshots
+![Terminal showing background task logs](docs/screenshots/background%20task%20logs.png)
+![process Endpoint](docs/screenshots/process%20endpoint.png)
+![items Endpoint](docs/screenshots/items%20endpoint.png)
