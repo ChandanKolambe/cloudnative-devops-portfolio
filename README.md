@@ -32,9 +32,10 @@ Visit: http://127.0.0.1:8000 → {"message":"Hello, DevOps World!"}
 - Created Hello World and echo endpoints
 - Verified app running locally at http://127.0.0.1:8000
 ## Screenshots
-![FastAPI Hello World](docs/screenshots/hello%20endpoint.png)
-![Swagger UI](docs/screenshots/echo%20endpoint.png)
+![FastAPI Hello World](docs/screenshots/day%201%20hello%20endpoint.png)
+![echo Endpoint](docs/screenshots/day%201%20echo%20endpoint.png)
 
+## Day 2 Progress
 - Implemented Dependency Injection using FastAPI `Depends`
 - Created a fake DB connection dependency
 - Added Background Tasks to simulate async logging
@@ -43,6 +44,15 @@ Visit: http://127.0.0.1:8000 → {"message":"Hello, DevOps World!"}
   - `/process/` → triggers background logging while returning instantly
 
 ## Screenshots
-![Terminal showing background task logs](docs/screenshots/background%20task%20logs.png)
-![process Endpoint](docs/screenshots/process%20endpoint.png)
-![items Endpoint](docs/screenshots/items%20endpoint.png)
+![Terminal showing background task logs](docs/screenshots/day%202%20background%20task%20logs.png)
+![process Endpoint](docs/screenshots/day%202%20process%20endpoint.png)
+![items Endpoint](docs/screenshots/day%202%20items%20endpoint.png)
+
+## Day 3 Progress
+- Integrated SQLAlchemy ORM with SQLite
+- Defined `User` model (id, name, email)
+- Added `/users/` endpoint to fetch users
+- Setup Alembic migrations for schema evolution
+
+## Screenshots
+![users Endpoint](docs/screenshots/day%203%20users%20endpoint.png)
