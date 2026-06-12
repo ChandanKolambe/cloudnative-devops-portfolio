@@ -56,3 +56,13 @@ Visit: http://127.0.0.1:8000 → {"message":"Hello, DevOps World!"}
 
 ## Screenshots
 ![users Endpoint](docs/screenshots/day%203%20users%20endpoint.png)
+
+## Day 4 Progress
+- Migrated database from SQLite → PostgreSQL
+- Created new database `portfolio_db`
+- Applied Alembic migrations to create tables
+- Seeded sample users directly in Postgres
+- Verified `/users/` endpoint returns real data
+
+## Screenshots
+![users Endpoint](docs/screenshots/day%204%20users%20endpoint.png)
