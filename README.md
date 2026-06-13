@@ -66,3 +66,18 @@ Visit: http://127.0.0.1:8000 → {"message":"Hello, DevOps World!"}
 
 ## Screenshots
 ![users Endpoint](docs/screenshots/day%204%20users%20endpoint.png)
+
+## Day 5 Progress
+- Implemented full CRUD APIs for `/users/`
+- Added Pydantic validations for name and email
+- Error handling with proper HTTP status codes
+
+## Screenshots
+![create user](docs/screenshots/day%205%20create%20user.png)
+![get user](docs/screenshots/day%205%20get%20user.png)
+![update user](docs/screenshots/day%205%20update%20user.png)
+![get all users](docs/screenshots/day%205%20get%20all%20users.png)
+![delete user](docs/screenshots/day%205%20delete%20user.png)
+![get user after delete](docs/screenshots/day%205%20get%20user%20after%20delete.png)
+![email id validation](docs/screenshots/day%205%20email%20id%20validation.png)
+![name validation](docs/screenshots/day%205%20name%20validation.png)
