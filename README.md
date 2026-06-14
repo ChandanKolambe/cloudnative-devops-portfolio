@@ -81,3 +81,13 @@ Visit: http://127.0.0.1:8000 → {"message":"Hello, DevOps World!"}
 ![get user after delete](docs/screenshots/day%205%20get%20user%20after%20delete.png)
 ![email id validation](docs/screenshots/day%205%20email%20id%20validation.png)
 ![name validation](docs/screenshots/day%205%20name%20validation.png)
+
+## Day 6 Progress
+- Integrated `pytest` framework into the project.
+- Configured `.env.test`, `pytest.ini`, and `conftest.py` to ensure tests run against a dedicated test database.
+- Wrote unit tests for User CRUD APIs:
+- Verified error handling for invalid inputs.
+- All tests passed successfully (`python -m pytest -v`).
+
+## Screenshots
+![pytest](docs/screenshots/day%206%20pytest%20unit%20tests.png)
