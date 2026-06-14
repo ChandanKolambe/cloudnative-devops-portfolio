@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, constr
+from pydantic import BaseModel, EmailStr, constr, ConfigDict
 
 class UserBase(BaseModel):
     name: constr(min_length=2, max_length=50)
@@ -13,5 +13,4 @@ class UserUpdate(UserBase):
 class UserResponse(UserBase):
     id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
