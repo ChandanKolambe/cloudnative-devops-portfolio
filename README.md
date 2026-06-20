@@ -101,3 +101,74 @@ Visit: http://127.0.0.1:8000 → {"message":"Hello, DevOps World!"}
 
 ## Screenshots
 ![prometheus](docs/screenshots/day%207%20prometheus%20metrics.png)
+
+## Day 8 Progress: Dockerization of FastAPI App
+
+This day focuses on containerizing the FastAPI application with PostgreSQL, applying migrations, testing endpoints.
+
+### 01. Create Dockerfile, docker-compose.yml, and .dockerignore
+Set up containerization for FastAPI app with PostgreSQL.
+
+**Files:**
+- `Dockerfile`
+- `docker-compose.yml`
+- `.dockerignore`
+
+### 02. Build and Run Containers
+Start app and databases inside Docker.
+
+```bash
+docker-compose up --build
+```
+- Builds web image
+- Starts db, db_test, and web services
+- Logs show FastAPI running at: http://0.0.0.0:8000
+![docker-compose](docs/screenshots/day%208%20docker%20compose%20up%20build.png)
+
+### 03. Test API Endpoints
+![docker-Swagger](docs/screenshots/day%208%20docker%20fastapi%20docs.png)
+Verify CRUD endpoints with curl.
+
+#### Get users (initially empty)
+```
+curl http://localhost:8000/users/
+```
+
+#### Create a new user
+```
+curl -X POST http://localhost:8000/users/ \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Chandan","email":"test@example.com"}'
+```
+![docker-POST-endpoint](docs/screenshots/day%208%20docker%20curl%20post%20users.png)
+#### Get users (returns JSON with created user)
+```
+curl http://localhost:8000/users/
+```
+![docker-GET-endpoint](docs/screenshots/day%208%20docker%20curl%20get%20users.png)
+
+### 04. Apply Alembic Migrations
+Create schema via migration scripts.
+```
+# Apply migrations to dev DB
+docker-compose run web alembic upgrade head
+
+# Apply migrations to test DB
+docker-compose run -e APP_ENV=test web alembic upgrade head
+```
+- Dev DB (portfolio_db) → users table created
+- Test DB (portfolio_test_db) → schema in sync
+![docker-alembic-migration](docs/screenshots/day%208%20docker%20alembic%20migration.png)
+
+### 05. Run Pytest in Docker
+Validate endpoints against test DB.
+```
+docker-compose run -e APP_ENV=test web pytest
+```
+Output:
+```
+tests/test_users.py .... [100%]
+4 passed in 0.82s
+```
+All tests passed successfully ✅
+![docker-pytest](docs/screenshots/day%208%20docker%20pytest%20results.png)
