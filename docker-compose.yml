@@ -6,32 +6,46 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/portfolio_db
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/portfolio_db"
+      RUNNING_IN_DOCKER: "true"
+      PYTHONPATH: "/app"
     depends_on:
-      - db
-      - db_test
+      db:
+        condition: service_healthy
+      db_test:
+        condition: service_healthy
 
   db:
     image: postgres:15
     environment:
-      POSTGRES_USER=postgres
-      POSTGRES_PASSWORD=postgres
-      POSTGRES_DB=portfolio_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: portfolio_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   db_test:
     image: postgres:15
     environment:
-      POSTGRES_USER=postgres
-      POSTGRES_PASSWORD=postgres
-      POSTGRES_DB=portfolio_test_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: portfolio_test_db
     ports:
       - "5433:5432"
     volumes:
       - postgres_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
