@@ -91,3 +91,13 @@ Visit: http://127.0.0.1:8000 → {"message":"Hello, DevOps World!"}
 
 ## Screenshots
 ![pytest](docs/screenshots/day%206%20pytest%20unit%20tests.png)
+
+## Day 7 Progress
+
+- Integrated `prometheus-client` into FastAPI.
+- Added middleware to track request counts and latency.
+- Exposed `/metrics` endpoint for Prometheus scraping.
+- Outcome: API is now observable, enabling monitoring dashboards in Grafana.
+
+## Screenshots
+![prometheus](docs/screenshots/day%207%20prometheus%20metrics.png)
