@@ -18,7 +18,7 @@ jobs:
         run: docker build -t portfolio-app:ci .
 
       - name: Run tests inside container
-        run: docker run -e APP_ENV=test -e PYTHONPATH=/app portfolio-app:ci pytest
+        run: docker run -e APP_ENV=test -e PYTHONPATH=/app -e CI=true portfolio-app:ci pytest
 
       - name: Scan Docker image with Trivy
         uses: aquasecurity/trivy-action@master
