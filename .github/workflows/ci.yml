@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ dev, main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: docker build -t portfolio-app:ci .
+
+      - name: Run tests inside container
+        run: docker run -e APP_ENV=test -e PYTHONPATH=/app -e CI=true portfolio-app:ci pytest
+
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: portfolio-app:ci
+          severity: 'HIGH,CRITICAL'
+          ignore-unfixed: true
+          format: 'table'
