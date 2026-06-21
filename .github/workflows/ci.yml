@@ -19,3 +19,11 @@ jobs:
 
       - name: Run tests inside container
         run: docker run -e APP_ENV=test portfolio-app:ci pytest
+
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: portfolio-app:ci
+          severity: 'HIGH,CRITICAL'
+          ignore-unfixed: true
+          format: 'table'
