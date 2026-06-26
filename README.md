@@ -42,12 +42,12 @@ This repository documents a step‑by‑step learning and implementation path. E
 This README is intentionally concise. Detailed day‑by‑day evidence, logs, and screenshots live in the project **Wiki** to keep the repo front page recruiter‑friendly.
 
 ![FastAPI Docs](docs/screenshots/day%208%20docker%20fastapi%20docs.png)
-DB
-pytest
-Docker
-Prometheus
-CICD github action
-![Grafana Dashboard](docs/screenshots/day%2010%20grafana%20dashboard.png)
+![Postgres DB](docs/screenshots/day%204%20postgres%20DB.png)
+![PyTest](docs/screenshots/day%206%20pytest%20unit%20tests.png)
+![Docker](docs/screenshots/day%208%20docker%20compose%20up%20build.png)
+![Prometheus](docs/screenshots/day%2010%20prometheus.png)
+![CI Github Actions](docs/screenshots/day%209%20ci%20success.png)
+![Grafana Dashboard](docs/screenshots/day%2010%20grafana.png)
 
 ---
 
@@ -140,21 +140,36 @@ docker-compose run -e APP_ENV=test web pytest -v
 
 ---
 
+### Environment Variables
+
+This project uses environment files for configuration:
+
+- `.env` → local/dev configuration (Postgres credentials, DB URLs, Docker flag).  
+  - This file is **gitignored** to keep secrets safe.  
+  - Copy `.env.example` → `.env` and adjust values as needed.
+
+- `.env.test` → test configuration (`APP_ENV=test`) used by pytest and CI.  
+  - This file is tracked in the repo so tests can run consistently.  
+
+---
+
 ### Testing & Validation
 
 **Local tests**
 
-* Add pytest.ini at repo root to ensure imports resolve:
+* Ensure `pytest.ini` at repo root configures environment files:
   
 ```
-[pytest]  pythonpath = .
+[pytest]
+env_files =
+    .env.test
 ```
 
 **Typical test commands**
 
 ```
 python -m pytest -v
-or inside docker
+# or inside docker
 docker-compose run -e APP_ENV=test web pytest -v
 ```
 
@@ -165,7 +180,7 @@ docker-compose run -e APP_ENV=test web pytest -v
 ```
 docker exec -it cloudnative-devops-portfolio-db-1 psql -U postgres -d portfolio_db
 
-inside psql
+# inside psql
 INSERT INTO users (name, email) VALUES ('TestUser', 'test@example.com');
 \q
 ```
