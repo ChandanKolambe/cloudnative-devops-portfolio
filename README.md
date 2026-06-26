@@ -1,210 +1,294 @@
 # CloudNative DevOps Portfolio
 
-This repository documents my journey from backend fundamentals (FastAPI, SQLAlchemy, pytest) to full DevOps practices (Docker, Kubernetes, Terraform, GitHub Actions, AWS EKS, Prometheus/Grafana).
+[![CI](https://github.com/ChandanKolambe/cloudnative-devops-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/ChandanKolambe/cloudnative-devops-portfolio/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Python](https://img.shields.io/badge/python-3.12-blue)
+![Docker](https://img.shields.io/badge/docker-ready-blue)
+![Security](https://img.shields.io/badge/security-Trivy%20scan-green)
 
-## Prerequisites
-- Python 3.12+
-- Git
-- VS Code
+**A compact, professional portfolio repository demonstrating a progression from backend fundamentals to production‑grade DevOps: FastAPI, SQLAlchemy, Docker, CI/CD, Kubernetes readiness, Prometheus/Grafana monitoring, and Terraform, AWS EKS.**
 
-### Setup Instructions
-```powershell
-# Clone repo
+---
+
+### Quick links
+
+* **Live demo (local)**: http://127.0.0.1:8000
+  
+* **Wiki (detailed day-by-day evidence)**: https://github.com//cloudnative-devops-portfolio/wiki
+  
+* **Branching**: feature branches → dev → main
+
+---
+
+### Overview
+
+This repository documents a step‑by‑step learning and implementation path. Each day is a focused milestone that builds toward a production‑ready, observable microservice:
+
+* **Backend**: FastAPI, Pydantic, SQLAlchemy, Alembic
+  
+* **Datastore**: PostgreSQL (dev + test)
+  
+* **Testing**: pytest, test DB isolation
+  
+* **Containerization**: Docker, docker‑compose
+  
+* **Observability**: prometheus-client, Prometheus, Grafana dashboards
+  
+* **CI/CD**: GitHub Actions (build, security scan, tests)
+  
+* **Docs**: README (high level) + GitHub Wiki (detailed evidence per day)
+  
+
+This README is intentionally concise. Detailed day‑by‑day evidence, logs, and screenshots live in the project **Wiki** to keep the repo front page recruiter‑friendly.
+
+![FastAPI Docs](docs/screenshots/day%208%20docker%20fastapi%20docs.png)
+![Postgres DB](docs/screenshots/day%204%20postgres%20DB.png)
+![PyTest](docs/screenshots/day%206%20pytest%20unit%20tests.png)
+![Docker](docs/screenshots/day%208%20docker%20compose%20up%20build.png)
+![Prometheus](docs/screenshots/day%2010%20prometheus.png)
+![CI Github Actions](docs/screenshots/day%209%20ci%20success.png)
+![Grafana Dashboard](docs/screenshots/day%2010%20grafana.png)
+
+---
+
+### Tech stack
+
+**Languages & Frameworks**
+
+* **Python 3.12**, FastAPI, SQLAlchemy, Alembic
+  
+
+**Infrastructure & DevOps**
+
+* Docker, docker‑compose, GitHub Actions, Trivy (security scan)
+  
+* Prometheus, Grafana (monitoring)
+  
+* PostgreSQL (dev + test)
+  
+
+**Testing & Quality**
+
+* pytest
+
+---
+
+### Quickstart — Local (developer)
+
+**1\. Clone**
+
+```
 git clone https://github.com/ChandanKolambe/cloudnative-devops-portfolio.git
 cd cloudnative-devops-portfolio
+```
 
-# Create virtual environment
+**2\. Python virtual environment**
+
+```
 python -m venv venv
-venv\Scripts\activate
+venv\Scripts\Activate.ps1
+```
 
-# Install dependencies
+**3\. Install**
+
+```
 pip install -r requirements.txt
+```
 
-#Run the App
+**4\. Run (dev)**
+
+```
 uvicorn app.main:app --reload
 ```
 
-Visit: http://127.0.0.1:8000 → {"message":"Hello, DevOps World!"}
+Visit http://127.0.0.1:8000 and API docs at http://127.0.0.1:8000/docs.
 
-## Day 1 Progress
-- Setup Python 3.12 virtual environment
-- Installed FastAPI + Uvicorn
-- Created Hello World and echo endpoints
-- Verified app running locally at http://127.0.0.1:8000
-## Screenshots
-![FastAPI Hello World](docs/screenshots/day%201%20hello%20endpoint.png)
-![echo Endpoint](docs/screenshots/day%201%20echo%20endpoint.png)
+---
 
-## Day 2 Progress
-- Implemented Dependency Injection using FastAPI `Depends`
-- Created a fake DB connection dependency
-- Added Background Tasks to simulate async logging
-- Verified endpoints:
-  - `/items/` → shows injected DB connection
-  - `/process/` → triggers background logging while returning instantly
+### Quickstart — Docker (recommended for full stack)
 
-## Screenshots
-![Terminal showing background task logs](docs/screenshots/day%202%20background%20task%20logs.png)
-![process Endpoint](docs/screenshots/day%202%20process%20endpoint.png)
-![items Endpoint](docs/screenshots/day%202%20items%20endpoint.png)
+**1\. Build and start**
 
-## Day 3 Progress
-- Integrated SQLAlchemy ORM with SQLite
-- Defined `User` model (id, name, email)
-- Added `/users/` endpoint to fetch users
-- Setup Alembic migrations for schema evolution
-
-## Screenshots
-![users Endpoint](docs/screenshots/day%203%20users%20endpoint.png)
-
-## Day 4 Progress
-- Migrated database from SQLite → PostgreSQL
-- Created new database `portfolio_db`
-- Applied Alembic migrations to create tables
-- Seeded sample users directly in Postgres
-- Verified `/users/` endpoint returns real data
-
-## Screenshots
-![users Endpoint](docs/screenshots/day%204%20users%20endpoint.png)
-
-## Day 5 Progress
-- Implemented full CRUD APIs for `/users/`
-- Added Pydantic validations for name and email
-- Error handling with proper HTTP status codes
-
-## Screenshots
-![create user](docs/screenshots/day%205%20create%20user.png)
-![get user](docs/screenshots/day%205%20get%20user.png)
-![update user](docs/screenshots/day%205%20update%20user.png)
-![get all users](docs/screenshots/day%205%20get%20all%20users.png)
-![delete user](docs/screenshots/day%205%20delete%20user.png)
-![get user after delete](docs/screenshots/day%205%20get%20user%20after%20delete.png)
-![email id validation](docs/screenshots/day%205%20email%20id%20validation.png)
-![name validation](docs/screenshots/day%205%20name%20validation.png)
-
-## Day 6 Progress
-- Integrated `pytest` framework into the project.
-- Configured `.env.test`, `pytest.ini`, and `conftest.py` to ensure tests run against a dedicated test database.
-- Wrote unit tests for User CRUD APIs:
-- Verified error handling for invalid inputs.
-- All tests passed successfully (`python -m pytest -v`).
-
-## Screenshots
-![pytest](docs/screenshots/day%206%20pytest%20unit%20tests.png)
-
-## Day 7 Progress
-
-- Integrated `prometheus-client` into FastAPI.
-- Added middleware to track request counts and latency.
-- Exposed `/metrics` endpoint for Prometheus scraping.
-- Outcome: API is now observable, enabling monitoring dashboards in Grafana.
-
-## Screenshots
-![prometheus](docs/screenshots/day%207%20prometheus%20metrics.png)
-
-## Day 8 Progress: Dockerization of FastAPI App
-
-This day focuses on containerizing the FastAPI application with PostgreSQL, applying migrations, testing endpoints.
-
-### 01. Create Dockerfile, docker-compose.yml, and .dockerignore
-Set up containerization for FastAPI app with PostgreSQL.
-
-**Files:**
-- `Dockerfile`
-- `docker-compose.yml`
-- `.dockerignore`
-
-### 02. Build and Run Containers
-Start app and databases inside Docker.
-
-```bash
+```
 docker-compose up --build
 ```
-- Builds web image
-- Starts db, db_test, and web services
-- Logs show FastAPI running at: http://0.0.0.0:8000
-![docker-compose](docs/screenshots/day%208%20docker%20compose%20up%20build.png)
 
-### 03. Test API Endpoints
-![docker-Swagger](docs/screenshots/day%208%20docker%20fastapi%20docs.png)
-Verify CRUD endpoints with curl.
+**2\. Services and ports**
 
-#### Get users (initially empty)
-```
-curl http://localhost:8000/users/
-```
 
-#### Create a new user
-```
-curl -X POST http://localhost:8000/users/ \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Chandan","email":"test@example.com"}'
-```
-![docker-POST-endpoint](docs/screenshots/day%208%20docker%20curl%20post%20users.png)
-#### Get users (returns JSON with created user)
-```
-curl http://localhost:8000/users/
-```
-![docker-GET-endpoint](docs/screenshots/day%208%20docker%20curl%20get%20users.png)
+| Service | Port |
+| :--- | :--- |
+| FastAPI (web) | 8000 |
+| Prometheus | 9090 |
+| Grafana | 3000 |
+| Postgres (dev) | 5432 |
+| Postgres (test) | 5433 |
 
-### 04. Apply Alembic Migrations
-Create schema via migration scripts.
+
+**3\. Apply migrations**
+
 ```
-# Apply migrations to dev DB
 docker-compose run web alembic upgrade head
-
-# Apply migrations to test DB
 docker-compose run -e APP_ENV=test web alembic upgrade head
 ```
-- Dev DB (portfolio_db) → users table created
-- Test DB (portfolio_test_db) → schema in sync
-![docker-alembic-migration](docs/screenshots/day%208%20docker%20alembic%20migration.png)
 
-### 05. Run Pytest in Docker
-Validate endpoints against test DB.
+**4\. Run tests (inside Docker)**
+
 ```
-docker-compose run -e APP_ENV=test web pytest
+docker-compose run -e APP_ENV=test web pytest -v
 ```
-Output:
+
+---
+
+### Environment Variables
+
+This project uses environment files for configuration:
+
+- `.env` → local/dev configuration (Postgres credentials, DB URLs, Docker flag).  
+  - This file is **gitignored** to keep secrets safe.  
+  - Copy `.env.example` → `.env` and adjust values as needed.
+
+- `.env.test` → test configuration (`APP_ENV=test`) used by pytest and CI.  
+  - This file is tracked in the repo so tests can run consistently.  
+
+---
+
+### Testing & Validation
+
+**Local tests**
+
+* Ensure `pytest.ini` at repo root configures environment files:
+  
 ```
-tests/test_users.py .... [100%]
-4 passed in 0.82s
+[pytest]
+env_files =
+    .env.test
 ```
-All tests passed successfully ✅
-![docker-pytest](docs/screenshots/day%208%20docker%20pytest%20results.png)
 
-## Day 9 Progress: CI/CD Milestone
+**Typical test commands**
 
-### Journey Recap
-- **Multi‑stage Dockerfile**
-  - Built optimized images with separate test DB stage.
-  - Verified FastAPI endpoints at `/docs`.
-  - ![Docker build success](docs/screenshots/day%209%20docker%20build.png)
-  - ![Docker build success](docs/screenshots/day%209%20docker%20compose%20build.png)
-  - ![Swagger API /docs](docs/screenshots/day%209%20swagger%20api.png)
-  - ![Docker build before](docs/screenshots/day%209%20docker%20image%20before.png)
-  - ![Docker build after](docs/screenshots/day%209%20docker%20image%20after.png)
+```
+python -m pytest -v
+# or inside docker
+docker-compose run -e APP_ENV=test web pytest -v
+```
 
-- **CI Workflow (`ci.yml`)**
-  - Added GitHub Actions pipeline: Docker build, Trivy security scan, pytest.
-  - Initial failures due to missing Postgres in CI.
+**Manual validation (example Day 10)**
 
-- **Codespaces Testing**
-  - Ran Docker builds and tests inside GitHub Codespaces.
-  - Captured outputs of `pytest` and FastAPI docs.
-  - ![Codespaces terminal pytest](docs/screenshots/day%209%20pytest.png)
+1.  Insert a test user:
 
-- **GitHub Actions Failures**
-  - Encountered `OperationalError: connection refused` (Postgres not running in CI).
-  - ![Error screenshot](docs/screenshots/day%209%20github%20actions%20failure.png)
+```
+docker exec -it cloudnative-devops-portfolio-db-1 psql -U postgres -d portfolio_db
 
-- **Resolution**
-  - Skipped DB‑dependent tests in CI using environment flag (`CI=true`).
-  - Added placeholder test to avoid pytest exit code 5.
-  - Pipeline now passes: Docker build ✅, Trivy scan ✅, pytest ✅.
-  - ![CI success screenshot](docs/screenshots/day%209%20ci%20success.png)
+# inside psql
+INSERT INTO users (name, email) VALUES ('TestUser', 'test@example.com');
+\q
+```
 
-### ✅ Outcome
-- CI/CD pipeline is **stable and green**.
-- Security scanning and lightweight tests run in CI.
-- Full CRUD tests remain available locally against Postgres.
+2.  Verify API:
+  
+```
+curl localhost:8000/users/
+# expected JSON includes TestUser
+```
+
+3.  Verify monitoring:
+  
+
+* Prometheus targets: http://localhost:9090/targets → **fastapi** job **UP**
+  
+* Grafana: http://localhost:3000 → dashboard panels update after hitting /users/
+
+---
+
+### CI / CD
+
+**What runs in CI**
+
+* Docker build
+  
+* Trivy security scan
+  
+* pytest (lightweight or CI‑safe tests)
+  
+
+**Notes**
+
+* DB‑dependent tests are run locally or in Codespaces. CI uses environment flags to skip heavy DB tests where appropriate.
+  
+* Keep CI green by separating fast unit tests from integration tests that require Postgres.
+
+---
+
+### Roadmap
+
+\- ✅ Day 1–9: Backend, DB, CRUD, CI/CD
+
+\- ✅ Day 10: Monitoring (Prometheus + Grafana)
+
+\- 🔜 Kubernetes, Terraform, AWS EKS
+
+---
+
+### Documentation strategy (recommended)
+
+* **README**: high‑level project overview, quickstart, tech stack, and roadmap. Keep it concise for recruiters.
+  
+* **Wiki**: one page per day (Day 1, Day 2, … ). Each page contains:
+  
+  * Goal and summary
+    
+  * Commands run
+    
+  * Logs and screenshots
+    
+  * Evidence checklist (what was validated)
+    
+* **Docs folder**: keep validation screenshots
+
+---
+
+### Contribution & Branching
+
+**Branching**
+
+* main — stable, production ready
+  
+* dev — integration branch for merged features
+  
+* feature/\* — work in progress branches (e.g., feature/day10-monitoring)
+  
+
+**Pull request checklist**
+
+* Code builds locally and in Docker
+  
+* Tests pass (pytest -v)
+  
+* Linting and formatting applied
+  
+* Documentation updated (README short note + Wiki page for detailed evidence)
+  
+
+**How to contribute**
+
+* Fork → create feature/\* → open PR to dev → request review
+
+---
+
+### Contact & License
+
+* **Author**: Chandan Kolambe
+  
+* **Email**: [chandan.kolambe@gmail.com](mailto:chandan.kolambe@gmail.com)
+
+* **License**: [MIT](LICENSE)
+---
+
+### About Me
+
+Hi, I’m **Chandan Kolambe** 👋  
+- 🚀 Aspiring DevOps/SRE engineer building a cloud‑native portfolio  
+- 🌍 Open to visa‑sponsored opportunities in Europe (Netherlands preferred)  
+- 📖 Documenting my daily learning journey in this repo + Wiki  
+- 🔗 Connect with me: [LinkedIn](https://www.linkedin.com/in/chandankolambe) | [GitHub](https://github.com/ChandanKolambe) | [Medium](https://medium.com/@ChandanKolambe)
