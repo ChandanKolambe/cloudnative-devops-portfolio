@@ -1,0 +1,22 @@
+{
+  "name": "Cloudnative DevOps Portfolio",
+  "forwardPorts": [8000, 5432, 5433, 6379],
+  "portsAttributes": {
+    "8000": {
+      "label": "FastAPI",
+      "visibility": "public"
+    },
+    "5432": {
+      "label": "Postgres DB",
+      "visibility": "private"
+    },
+    "5433": {
+      "label": "Postgres Test DB",
+      "visibility": "private"
+    },
+    "6379": {
+      "label": "Redis",
+      "visibility": "private"
+    }
+  }
+}
