@@ -1,9 +1,10 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks
 from app.core.database import Base, engine
 from app.routers import users
 from prometheus_client import Counter, Histogram, generate_latest
 from starlette.responses import Response
+import redis
 
 app = FastAPI(title="CloudNative DevOps Portfolio API", version="0.3.0")
 
@@ -27,3 +28,19 @@ async def prometheus_middleware(request, call_next):
 @app.get("/metrics")
 async def metrics():
     return Response(generate_latest(), media_type="text/plain")
+
+redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+r = redis.Redis.from_url(redis_url)
+
+def write_to_redis(message: str):
+    r.lpush("messages", message)
+
+@app.post("/send-task/")
+async def send_task(background_tasks: BackgroundTasks, msg: str):
+    background_tasks.add_task(write_to_redis, msg)
+    return {"status": "queued", "message": msg}
+
+@app.get("/messages/")
+async def get_messages():
+    msgs = r.lrange("messages", 0, -1)
+    return {"messages": [m.decode("utf-8") for m in msgs]}

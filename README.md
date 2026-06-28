@@ -24,9 +24,9 @@
 
 This repository documents a step‑by‑step learning and implementation path. Each day is a focused milestone that builds toward a production‑ready, observable microservice:
 
-* **Backend**: FastAPI, Pydantic, SQLAlchemy, Alembic
+* **Backend**: FastAPI, Pydantic, SQLAlchemy, Alembic, BackgroundTasks
   
-* **Datastore**: PostgreSQL (dev + test)
+* **Datastore**: PostgreSQL (dev + test), Redis (for async tasks)
   
 * **Testing**: pytest, test DB isolation
   
@@ -64,7 +64,7 @@ This README is intentionally concise. Detailed day‑by‑day evidence, logs, an
   
 * Prometheus, Grafana (monitoring)
   
-* PostgreSQL (dev + test)
+* PostgreSQL (dev + test), Redis (queue + background tasks)
   
 
 **Testing & Quality**
@@ -123,7 +123,7 @@ docker-compose up --build
 | Grafana | 3000 |
 | Postgres (dev) | 5432 |
 | Postgres (test) | 5433 |
-
+| Redis | 6379 |
 
 **3\. Apply migrations**
 
@@ -225,6 +225,8 @@ curl localhost:8000/users/
 \- ✅ Day 1–9: Backend, DB, CRUD, CI/CD
 
 \- ✅ Day 10: Monitoring (Prometheus + Grafana)
+
+\- ✅ Day 11: Redis integration with FastAPI background tasks
 
 \- 🔜 Kubernetes, Terraform, AWS EKS
 
