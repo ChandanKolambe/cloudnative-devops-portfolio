@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks
 from app.core.database import Base, engine
 from app.routers import users
 from prometheus_client import Counter, Histogram, generate_latest
