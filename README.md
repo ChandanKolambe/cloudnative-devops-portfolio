@@ -30,7 +30,7 @@ This repository documents a step‑by‑step learning and implementation path. E
   
 * **Testing**: pytest, test DB isolation
   
-* **Containerization**: Docker, docker‑compose
+* **Containerization**: Docker, docker‑compose, Docker Hub (registry)
   
 * **Observability**: prometheus-client, Prometheus, Grafana dashboards
   
@@ -138,6 +138,23 @@ docker-compose run -e APP_ENV=test web alembic upgrade head
 docker-compose run -e APP_ENV=test web pytest -v
 ```
 
+**5\. Build & Push Image (optional)**
+
+Build locally:
+```
+docker build -t chandankolambe/fastapi-app:latest .
+```
+Push to Docker Hub
+
+```bash
+docker login
+docker push chandankolambe/fastapi-app:latest
+```
+Run directly from Docker Hub
+```bash
+docker run -p 8000:8000 chandankolambe/fastapi-app:latest
+```
+
 ---
 
 ### Environment Variables
@@ -227,6 +244,8 @@ curl localhost:8000/users/
 \- ✅ Day 10: Monitoring (Prometheus + Grafana)
 
 \- ✅ Day 11: Redis integration with FastAPI background tasks
+
+\- ✅ Containerization: Docker, docker‑compose, Docker Hub registry
 
 \- 🔜 Kubernetes, Terraform, AWS EKS
 
