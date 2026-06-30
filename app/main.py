@@ -44,3 +44,7 @@ async def send_task(background_tasks: BackgroundTasks, msg: str):
 async def get_messages():
     msgs = r.lrange("messages", 0, -1)
     return {"messages": [m.decode("utf-8") for m in msgs]}
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}

@@ -22,11 +22,6 @@ services:
       timeout: 5s
       retries: 3
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: "0.50"
-          memory: "512M"
 
   db:
     image: postgres:15
