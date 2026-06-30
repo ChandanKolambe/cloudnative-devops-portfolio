@@ -26,13 +26,15 @@ This repository documents a step‑by‑step learning and implementation path. E
 
 * **Backend**: FastAPI, Pydantic, SQLAlchemy, Alembic, BackgroundTasks
   
-* **Datastore**: PostgreSQL (dev + test), Redis (for async tasks)
+* **Datastore**: PostgreSQL (dev + test), Redis (for async tasks and background queue)
   
 * **Testing**: pytest, test DB isolation
   
-* **Containerization**: Docker, docker‑compose
+* **Containerization**: Docker, docker‑compose, Docker Hub (registry)
   
-* **Observability**: prometheus-client, Prometheus, Grafana dashboards
+* **Observability**: Prometheus client middleware with /metrics endpoint, Prometheus, Grafana dashboards
+
+* **Healthcheck**: FastAPI /health endpoint integrated with Docker health probes
   
 * **CI/CD**: GitHub Actions (build, security scan, tests)
   
@@ -125,17 +127,57 @@ docker-compose up --build
 | Postgres (test) | 5433 |
 | Redis | 6379 |
 
-**3\. Apply migrations**
+**3. Test endpoints**
+
+- Health check:
+  ```bash
+  curl localhost:8000/health
+  # {"status":"ok"}
+  ```
+- User CRUD:
+  ```bash
+  curl -X POST localhost:8000/users/ -H "Content-Type: application/json" \
+  -d '{"name":"Test","email":"test@example.com"}'
+  curl localhost:8000/users/
+  ```
+- Metrics:
+  ```bash
+  curl localhost:8000/metrics
+  ```
+- Redis background tasks:
+  ```bash
+  curl -X POST localhost:8000/send-task/ -d "msg=Hello"
+  curl localhost:8000/messages/
+  ```
+
+**4\. Apply migrations**
 
 ```
 docker-compose run web alembic upgrade head
 docker-compose run -e APP_ENV=test web alembic upgrade head
 ```
 
-**4\. Run tests (inside Docker)**
+**5\. Run tests (inside Docker)**
 
 ```
 docker-compose run -e APP_ENV=test web pytest -v
+```
+
+**6\. Build & Push Image (optional)**
+
+Build locally:
+```
+docker build -t chandankolambe/fastapi-app:latest .
+```
+Push to Docker Hub
+
+```bash
+docker login
+docker push chandankolambe/fastapi-app:latest
+```
+Run directly from Docker Hub
+```bash
+docker run -p 8000:8000 chandankolambe/fastapi-app:latest
 ```
 
 ---
@@ -227,6 +269,8 @@ curl localhost:8000/users/
 \- ✅ Day 10: Monitoring (Prometheus + Grafana)
 
 \- ✅ Day 11: Redis integration with FastAPI background tasks
+
+\- ✅ Day 12: Container packaging improvements (non-root user, healthcheck, Docker Hub image)
 
 \- 🔜 Kubernetes, Terraform, AWS EKS
 
