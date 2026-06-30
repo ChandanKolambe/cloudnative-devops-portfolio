@@ -1,6 +1,7 @@
 services:
   web:
     build: .
+    image: chandankolambe/fastapi-app:day12
     ports:
       - "8000:8000"
     environment:
@@ -20,6 +21,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    restart: unless-stopped
 
   db:
     image: postgres:15
