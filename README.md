@@ -5,6 +5,7 @@
 ![Python](https://img.shields.io/badge/python-3.12-blue)
 ![Docker](https://img.shields.io/badge/docker-ready-blue)
 ![Security](https://img.shields.io/badge/security-Trivy%20scan-green)
+[![Docker](https://img.shields.io/docker/pulls/chandankolambe/fastapi-app)](https://hub.docker.com/r/chandankolambe/fastapi-app)
 
 **A compact, professional portfolio repository demonstrating a progression from backend fundamentals to production‑grade DevOps: FastAPI, SQLAlchemy, Docker, CI/CD, Kubernetes readiness, Prometheus/Grafana monitoring, and Terraform, AWS EKS.**
 
@@ -41,7 +42,7 @@ This repository documents a step‑by‑step learning and implementation path. E
 * **Docs**: README (high level) + GitHub Wiki (detailed evidence per day)
   
 
-This README is intentionally concise. Detailed day‑by‑day evidence, logs, and screenshots live in the project **Wiki** to keep the repo front page recruiter‑friendly.
+This README is intentionally concise. Detailed day‑by‑day evidence, logs, and screenshots live in the project **Wiki**.
 
 ![FastAPI Docs](docs/screenshots/day%208%20docker%20fastapi%20docs.png)
 ![Postgres DB](docs/screenshots/day%204%20postgres%20DB.png)
@@ -262,23 +263,32 @@ curl localhost:8000/users/
 
 ---
 
-### Roadmap
+### 📘 Roadmap
+- ✅ v0.2.0 – Initial FastAPI setup
+- ✅ v0.3.0 – Basic endpoints
+- ✅ v0.5.0 – Observability basics
+- ✅ v0.6.0 – Prometheus integration
+- ✅ v0.7.0 – DB Migrations
+- ✅ v0.8.0 – Dockerization
+- ✅ v0.9.0 – CI/CD
+- ✅ v0.10.0 – Monitoring
+- ✅ v0.11.0 – Redis integration
+- ✅ v0.12.0 – Packaging & Registry
+- ✅ v0.13.0 – Git Enhancements
+- 🔜 Kubernetes, Terraform, AWS EKS
 
-\- ✅ Day 1–9: Backend, DB, CRUD, CI/CD
+---
 
-\- ✅ Day 10: Monitoring (Prometheus + Grafana)
-
-\- ✅ Day 11: Redis integration with FastAPI background tasks
-
-\- ✅ Day 12: Container packaging improvements (non-root user, healthcheck, Docker Hub image)
-
-\- 🔜 Kubernetes, Terraform, AWS EKS
+### 🔖 Versioning
+This project follows [Semantic Versioning](https://semver.org/):
+- Milestones → v0.x.0
+- Fixes/patches → v0.x.1
 
 ---
 
 ### Documentation strategy (recommended)
 
-* **README**: high‑level project overview, quickstart, tech stack, and roadmap. Keep it concise for recruiters.
+* **README**: high‑level project overview, quickstart, tech stack, and roadmap.
   
 * **Wiki**: one page per day (Day 1, Day 2, … ). Each page contains:
   
@@ -319,6 +329,20 @@ curl localhost:8000/users/
 **How to contribute**
 
 * Fork → create feature/\* → open PR to dev → request review
+
+---
+
+### 📄 Release Notes
+See [CHANGELOG.md](CHANGELOG.md) for detailed milestone history (v0.2.0 → v0.13.0).
+
+### 🤝 Contributing
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+### 📜 Code of Conduct
+See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+### 🔒 Security
+See [SECURITY.md](SECURITY.md) for vulnerability reporting.
 
 ---
 
