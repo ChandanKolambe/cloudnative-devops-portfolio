@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fastapi-pod
+  labels:
+    app: fastapi
+spec:
+  containers:
+  - name: fastapi
+    image: ghcr.io/chandankolambe/cloudnative-devops-portfolio/app:latest
+    ports:
+    - containerPort: 8000
