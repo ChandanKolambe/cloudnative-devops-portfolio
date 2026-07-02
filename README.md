@@ -6,6 +6,7 @@
 ![Docker](https://img.shields.io/badge/docker-ready-blue)
 ![Security](https://img.shields.io/badge/security-Trivy%20scan-green)
 [![Docker](https://img.shields.io/docker/pulls/chandankolambe/fastapi-app)](https://hub.docker.com/r/chandankolambe/fastapi-app)
+![GHCR](https://img.shields.io/badge/GHCR-published-blue)
 
 **A compact, professional portfolio repository demonstrating a progression from backend fundamentals to production‑grade DevOps: FastAPI, SQLAlchemy, Docker, CI/CD, Kubernetes readiness, Prometheus/Grafana monitoring, and Terraform, AWS EKS.**
 
@@ -31,7 +32,7 @@ This repository documents a step‑by‑step learning and implementation path. E
   
 * **Testing**: pytest, test DB isolation
   
-* **Containerization**: Docker, docker‑compose, Docker Hub (registry)
+* **Containerization**: Docker, docker‑compose, Docker Hub (registry), GitHub Container Registry (GHCR)
   
 * **Observability**: Prometheus client middleware with /metrics endpoint, Prometheus, Grafana dashboards
 
@@ -164,7 +165,7 @@ docker-compose run -e APP_ENV=test web alembic upgrade head
 docker-compose run -e APP_ENV=test web pytest -v
 ```
 
-**6\. Build & Push Image (optional)**
+**6\. Build & Push Image (Docker Hub)**
 
 Build locally:
 ```
@@ -180,6 +181,35 @@ Run directly from Docker Hub
 ```bash
 docker run -p 8000:8000 chandankolambe/fastapi-app:latest
 ```
+
+OR  
+**6\. Build & Push Image (GHCR)**
+
+Build locally:
+```bash
+docker build -t ghcr.io/chandankolambe/cloudnative-devops-portfolio/app:latest .
+```
+
+Push to GHCR (CI/CD):
+```bash
+echo $GITHUB_TOKEN | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+docker push ghcr.io/chandankolambe/cloudnative-devops-portfolio/app:latest
+```
+
+Run directly from GHCR:
+```bash
+docker run -p 8000:8000 ghcr.io/chandankolambe/cloudnative-devops-portfolio/app:latest
+```
+
+Latest build pull from GHCR:
+```bash
+docker pull ghcr.io/chandankolambe/cloudnative-devops-portfolio/app:latest
+```
+Commit‑specific build pull from GHCR::
+```bash
+docker pull ghcr.io/chandankolambe/cloudnative-devops-portfolio/app:<commit-sha>
+```
+Images are automatically scanned with Trivy during CI/CD to detect vulnerabilities before publishing.  
 
 ---
 

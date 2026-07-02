@@ -21,12 +21,22 @@ jobs:
 
       - name: Build image
         run: |
-          IMAGE_ID=ghcr.io/${{ github.repository }}/my-image:latest
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[:upper:]' '[:lower:]')
-          docker build -t $IMAGE_ID .
+          IMAGE_BASE=ghcr.io/${{ github.repository }}/app
+          IMAGE_BASE=$(echo $IMAGE_BASE | tr '[:upper:]' '[:lower:]')
+          docker build -t $IMAGE_BASE:latest .
+          docker tag $IMAGE_BASE:latest $IMAGE_BASE:${{ github.sha }}
+
+      - name: Security scan with Trivy
+        uses: aquasecurity/trivy-action@0.12.0
+        with:
+          image-ref: ghcr.io/${{ github.repository }}/app:latest
+          format: 'table'
+          exit-code: '0'
+          ignore-unfixed: true
 
       - name: Push image
         run: |
-          IMAGE_ID=ghcr.io/${{ github.repository }}/my-image:latest
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[:upper:]' '[:lower:]')
-          docker push $IMAGE_ID
+          IMAGE_BASE=ghcr.io/${{ github.repository }}/app
+          IMAGE_BASE=$(echo $IMAGE_BASE | tr '[:upper:]' '[:lower:]')
+          docker push $IMAGE_BASE:latest
+          docker push $IMAGE_BASE:${{ github.sha }}
