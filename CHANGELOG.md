@@ -5,6 +5,16 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [v0.14.0] - 2026-07-02
+### Day 14 – Kubernetes Baseline Cluster
+- Created Kind cluster (`day14-cluster`) inside Codespace.
+- Deployed FastAPI app as both a standalone Pod and a Deployment (2 replicas).
+- Added Postgres Deployment + Service (`db`) for database integration.
+- Patched FastAPI manifests with `DATABASE_URL` env var to connect Postgres.
+- Verified pods (`fastapi` + `postgres`) all running successfully.
+
+---
+
 ## [v0.13.0] - 2026-07-01
 ### Day 13 – Git Enhancements
 - Configured protected branches (`main` requires PR reviews).
@@ -57,4 +67,3 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Implemented FastAPI app with /users CRUD endpoints
 - Integrated SQLAlchemy ORM and Alembic migrations
 - Added pytest unit tests (initial CRUD validation)
-- 
