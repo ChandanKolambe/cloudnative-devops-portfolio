@@ -18,5 +18,9 @@
       "label": "Redis",
       "visibility": "private"
     }
-  }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh"
 }

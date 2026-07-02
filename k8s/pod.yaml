@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fastapi-pod
+  labels:
+    app: fastapi
+spec:
+  containers:
+  - name: fastapi
+    image: ghcr.io/chandankolambe/cloudnative-devops-portfolio/app:latest
+    ports:
+    - containerPort: 8000
+    env:
+    - name: DATABASE_URL
+      value: "postgresql://postgres:postgres@db:5432/portfolio_db"

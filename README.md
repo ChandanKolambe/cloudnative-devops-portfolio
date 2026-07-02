@@ -33,6 +33,8 @@ This repository documents a step‑by‑step learning and implementation path. E
 * **Testing**: pytest, test DB isolation
   
 * **Containerization**: Docker, docker‑compose, Docker Hub (registry), GitHub Container Registry (GHCR)
+
+* **Orchestration**: Kubernetes (Kind cluster, Pods, Deployments, Services)
   
 * **Observability**: Prometheus client middleware with /metrics endpoint, Prometheus, Grafana dashboards
 
@@ -64,7 +66,7 @@ This README is intentionally concise. Detailed day‑by‑day evidence, logs, an
 
 **Infrastructure & DevOps**
 
-* Docker, docker‑compose, GitHub Actions, Trivy (security scan)
+* Docker, docker‑compose, Kubernetes (Kind), GitHub Actions, Trivy (security scan)
   
 * Prometheus, Grafana (monitoring)
   
@@ -305,7 +307,8 @@ curl localhost:8000/users/
 - ✅ v0.11.0 – Redis integration
 - ✅ v0.12.0 – Packaging & Registry
 - ✅ v0.13.0 – Git Enhancements
-- 🔜 Kubernetes, Terraform, AWS EKS
+- ✅ v0.14.0 – Kubernetes baseline cluster
+- 🔜 Terraform, AWS EKS
 
 ---
 
@@ -363,7 +366,7 @@ This project follows [Semantic Versioning](https://semver.org/):
 ---
 
 ### 📄 Release Notes
-See [CHANGELOG.md](CHANGELOG.md) for detailed milestone history (v0.2.0 → v0.13.0).
+See [CHANGELOG.md](CHANGELOG.md) for detailed milestone history (v0.2.0 → v0.14.0).
 
 ### 🤝 Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
