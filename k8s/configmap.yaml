@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fastapi-config
+data:
+  PYTHONPATH: "/app"
+  RUNNING_IN_DOCKER: "false"

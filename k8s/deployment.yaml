@@ -19,6 +19,8 @@ spec:
         image: ghcr.io/chandankolambe/cloudnative-devops-portfolio/app:latest
         ports:
         - containerPort: 8000
-        env:
-        - name: DATABASE_URL
-          value: "postgresql://postgres:postgres@db:5432/portfolio_db"
+        envFrom:
+        - configMapRef:
+            name: fastapi-config
+        - secretRef:
+            name: postgres-secret
