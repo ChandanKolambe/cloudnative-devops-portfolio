@@ -1,26 +1,12 @@
 {
   "name": "Cloudnative DevOps Portfolio",
-  "forwardPorts": [8000, 5432, 5433, 6379],
-  "portsAttributes": {
-    "8000": {
-      "label": "FastAPI",
-      "visibility": "public"
-    },
-    "5432": {
-      "label": "Postgres DB",
-      "visibility": "private"
-    },
-    "5433": {
-      "label": "Postgres Test DB",
-      "visibility": "private"
-    },
-    "6379": {
-      "label": "Redis",
-      "visibility": "private"
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "latest",
+      "helm": "latest"
     }
   },
-  "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
-  },
-  "postCreateCommand": "bash .devcontainer/setup.sh"
+  "onCreateCommand": "if ! command -v kind &> /dev/null; then curl -Lo kind https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64 && chmod +x kind && sudo mv kind /usr/local/bin/; fi",
+  "postStartCommand": "bash .devcontainer/setup.sh"
 }

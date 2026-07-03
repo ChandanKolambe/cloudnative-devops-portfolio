@@ -1,16 +1,91 @@
 #!/bin/bash
 set -e
 
-# Install kubectl
-curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-chmod +x kubectl && sudo mv kubectl /usr/local/bin/
+echo "=== Initialising Kubernetes Infrastructure ==="
 
-# Install kind
-curl -Lo kind https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64
-chmod +x kind && sudo mv kind /usr/local/bin/
+# 1. Structural delay to let the Docker background service wake up safely
+echo "Pausing 15 seconds for background daemon initialization..."
+sleep 15
 
-# Install Helm (Downloads cleanly to /tmp without needing sudo interaction)
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | USE_SUDO=false HELM_INSTALL_DIR=/tmp bash
+# 2. Polling loop to confirm Docker socket accessibility without crashing
+echo "Verifying Docker service stability..."
+set +e
+DOCKER_READY=false
+for i in {1..10}; do
+  if docker info &> /dev/null; then
+    DOCKER_READY=true
+    break
+  fi
+  echo "Docker daemon is starting up, retrying in 3 seconds... ($i/10)"
+  sleep 3
+done
+set -e
 
-# Move it into your system path using explicit script privileges
-sudo mv /tmp/helm /usr/local/bin/
+if [ "$DOCKER_READY" != true ]; then
+  echo "ERROR: Docker daemon failed to become reachable. Exiting."
+  exit 1
+fi
+echo "Docker is online and stable!"
+
+# 3. Spin up the KinD cluster safely if missing
+if ! kind get clusters 2>/dev/null | grep -q "cloudnative-cluster"; then
+  echo "Creating KinD cluster (this takes 1-2 minutes)..."
+  kind create cluster --name cloudnative-cluster
+else
+  echo "KinD cluster already exists."
+fi
+
+# 4. Sync configuration credentials
+echo "Loading cluster kubeconfig credentials..."
+kind export kubeconfig --name cloudnative-cluster
+
+# 5. Wait for API gateway readiness with a maximum timeout ceiling
+echo "Validating Kubernetes API stability..."
+set +e
+K8S_READY=false
+for i in {1..20}; do
+  if kubectl cluster-info &> /dev/null; then
+    K8S_READY=true
+    break
+  fi
+  sleep 3
+done
+set -e
+
+if [ "$K8S_READY" != true ]; then
+  echo "ERROR: Kubernetes control plane failed to respond."
+  exit 1
+fi
+echo "Kubernetes is online!"
+
+# 6. Deploy directory resources safely
+echo "Applying directory manifests..."
+if [ -d "k8s" ]; then
+  kubectl apply -f k8s/ --timeout=30s || echo "Warning: k8s resources took too long to apply."
+fi
+
+if [ -d "monitoring" ]; then
+  kubectl apply -f monitoring/ --timeout=30s || echo "Warning: monitoring resources took too long to apply."
+fi
+
+# 7. Resilient background port-forwarding engine
+echo "Initialising background port-forward controller..."
+cat << 'EOF' > /tmp/k8s-port-forward.sh
+#!/bin/bash
+while true; do
+  if ! nc -z localhost 9090 &>/dev/null; then
+    kubectl port-forward svc/prometheus 9090:9090 &>/dev/null &
+  fi
+  if ! nc -z localhost 3000 &>/dev/null; then
+    kubectl port-forward svc/grafana 3000:3000 &>/dev/null &
+  fi
+  sleep 10
+done
+EOF
+
+chmod +x /tmp/k8s-port-forward.sh
+nohup /tmp/k8s-port-forward.sh >/dev/null 2>&1 &
+
+echo "=== Setup Successfully Finalised! ==="
+echo "Prometheus exposure targeted → http://localhost:9090"
+echo "Grafana exposure targeted    → http://localhost:3000"
