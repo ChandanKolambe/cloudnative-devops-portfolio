@@ -14,9 +14,10 @@ spec:
       labels:
         app: fastapi
     spec:
+      serviceAccountName: fastapi-sa
       containers:
       - name: fastapi
-        image: ghcr.io/chandankolambe/cloudnative-devops-portfolio/app:latest
+        image: ghcr.io/chandankolambe/cloudnative-devops-portfolio/app:0.16.0
         ports:
         - containerPort: 8000
         livenessProbe:
