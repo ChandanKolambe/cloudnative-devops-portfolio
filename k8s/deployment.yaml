@@ -14,6 +14,7 @@ spec:
       labels:
         app: fastapi
     spec:
+      serviceAccountName: fastapi-sa
       containers:
       - name: fastapi
         image: ghcr.io/chandankolambe/cloudnative-devops-portfolio/app:latest
