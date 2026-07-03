@@ -215,6 +215,33 @@ Images are automatically scanned with Trivy during CI/CD to detect vulnerabiliti
 
 ---
 
+### Quickstart — GitHub Codespaces (Kubernetes)
+
+This project includes a `devcontainer.json` and `.devcontainer/setup.sh` that automatically:
+
+- Installs `kubectl`, `kind`, and `helm`
+- Creates a local KinD cluster (`cloudnative-cluster`)
+- Applies all manifests in `k8s/` and `monitoring/`
+- Starts port-forwarding for Prometheus (`9090`) and Grafana (`3000`)
+
+#### Steps:
+
+1. Open the repo in GitHub Codespaces.
+2. Wait for the post-create setup to finish (cluster + manifests applied).
+3. Verify pods and services:
+
+```bash
+kubectl get pods
+kubectl get svc
+```
+4. Access UIs via forwarded ports:
+
+- **FastAPI** → [https://&lt;codespace-id&gt;-30080.app.github.dev/health](https://<codespace-id>-30080.app.github.dev/health)
+- **Prometheus** → [https://&lt;codespace-id&gt;-9090.app.github.dev](https://<codespace-id>-9090.app.github.dev)
+- **Grafana** → [https://&lt;codespace-id&gt;-3000.app.github.dev](https://<codespace-id>-3000.app.github.dev)
+
+---
+
 ### Environment Variables
 
 This project uses environment files for configuration:
