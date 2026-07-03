@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: postgres-test
   labels:
-    app: postgres
+    app: postgres-test
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: postgres-test
   template:
     metadata:
       labels:
-        app: postgres
+        app: postgres-test
     spec:
       containers:
-      - name: postgres
+      - name: postgres-test
         image: postgres:15
         env:
         - name: POSTGRES_USER
@@ -23,13 +23,12 @@ spec:
         - name: POSTGRES_PASSWORD
           value: postgres
         - name: POSTGRES_DB
-          value: portfolio_db
+          value: portfolio_test_db
         ports:
         - containerPort: 5432
         volumeMounts:
-        - name: postgres-storage
+        - name: postgres-test-storage
           mountPath: /var/lib/postgresql/data
       volumes:
-      - name: postgres-storage
-        persistentVolumeClaim:
-          claimName: postgres-pvc
+      - name: postgres-test-storage
+        emptyDir: {}
