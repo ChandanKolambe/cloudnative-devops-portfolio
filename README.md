@@ -7,6 +7,7 @@
 ![Security](https://img.shields.io/badge/security-Trivy%20scan-green)
 [![Docker](https://img.shields.io/docker/pulls/chandankolambe/fastapi-app)](https://hub.docker.com/r/chandankolambe/fastapi-app)
 ![GHCR](https://img.shields.io/badge/GHCR-published-blue)
+![Kubernetes](https://img.shields.io/badge/kubernetes-ready-blue)
 
 **A compact, professional portfolio repository demonstrating a progression from backend fundamentals to production‑grade DevOps: FastAPI, SQLAlchemy, Docker, CI/CD, Kubernetes readiness, Prometheus/Grafana monitoring, and Terraform, AWS EKS.**
 
@@ -223,6 +224,9 @@ This project includes a `devcontainer.json` and `.devcontainer/setup.sh` that au
 - Creates a local KinD cluster (`cloudnative-cluster`)
 - Applies all manifests in `k8s/` and `monitoring/`
 - Starts port-forwarding for Prometheus (`9090`) and Grafana (`3000`)
+- Namespace isolation (`cloudnative-devops`)
+- RBAC with `fastapi-sa` ServiceAccount
+- Images pulled from GHCR (`app:<version>`)
 
 #### Steps:
 
@@ -335,6 +339,8 @@ curl localhost:8000/users/
 - ✅ v0.12.0 – Packaging & Registry
 - ✅ v0.13.0 – Git Enhancements
 - ✅ v0.14.0 – Kubernetes baseline cluster
+- ✅ v0.15.0 – Kubernetes advanced services & monitoring
+- ✅ v0.16.0 – Namespace & RBAC
 - 🔜 Terraform, AWS EKS
 
 ---
@@ -393,7 +399,7 @@ This project follows [Semantic Versioning](https://semver.org/):
 ---
 
 ### 📄 Release Notes
-See [CHANGELOG.md](CHANGELOG.md) for detailed milestone history (v0.2.0 → v0.14.0).
+See [CHANGELOG.md](CHANGELOG.md) for detailed milestone history (v0.2.0 → v0.16.0).
 
 ### 🤝 Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.

@@ -5,6 +5,28 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [v0.16.0] - 2026-07-03
+### Day 16 – Namespace & RBAC
+- Introduced `cloudnative-devops` namespace for workload isolation.
+- Created `fastapi-sa` ServiceAccount and bound it with Role + RoleBinding.
+- Updated FastAPI Deployment to use ServiceAccount.
+- Pushed versioned image `ghcr.io/chandankolambe/cloudnative-devops-portfolio/app:0.16.0`.
+- Verified pods running with RBAC enforced and correct image tag.
+- Captured evidence via kubectl outputs and GHCR package screenshot.
+
+---
+
+## [v0.15.0] - 2026-07-02
+### Day 15 – Kubernetes Advanced Services & Monitoring
+- Recreated Kind cluster (`day15-cluster`) and validated control plane readiness.
+- Applied ConfigMap, Secret, Postgres PVC, Deployment, and Service.
+- Deployed Redis and confirmed FastAPI pods connected via `REDIS_URL`.
+- Rolled out FastAPI Deployment + Service with DB + Redis integration.
+- Deployed Prometheus + Grafana monitoring stack in cluster.
+- Validated FastAPI endpoints (`/health`, `/users`, `/send-task`, `/metrics`) with curl.
+
+---
+
 ## [v0.14.0] - 2026-07-02
 ### Day 14 – Kubernetes Baseline Cluster
 - Created Kind cluster (`day14-cluster`) inside Codespace.
