@@ -343,6 +343,7 @@ curl localhost:8000/users/
 - ✅ v0.15.0 – Kubernetes advanced services & monitoring
 - ✅ v0.16.0 – Namespace & RBAC
 - ✅ v0.17.0 – Ingress + TLS
+- ✅ v0.18.0 – Probes & Resource Limits
 - 🔜 Terraform, AWS EKS
 
 ---
