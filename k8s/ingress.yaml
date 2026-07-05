@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: fastapi-ingress
-  namespace: portfolio-ns
+  namespace: cloudnative-devops
   annotations:
     cert-manager.io/cluster-issuer: selfsigned-issuer
 spec:
