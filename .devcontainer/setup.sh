@@ -89,6 +89,28 @@ kubectl apply -f k8s/deployment.yaml -n cloudnative-devops --validate=false
 kubectl apply -f k8s/fastapi-service.yaml -n cloudnative-devops
 kubectl rollout status deployment/fastapi-deployment -n cloudnative-devops --timeout=90s
 
+# ----------------------------------------------------------------------------
+# ADDED: Idempotent Ingress & TLS Infrastructure Layer
+# ----------------------------------------------------------------------------
+echo "--> Deploying NGINX Ingress Controller..."
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+# --upgrade-install makes the helm script re-runnable without errors
+helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+  --namespace ingress-nginx --create-namespace \
+  --wait --timeout=5m0s
+
+echo "--> Deploying Cert-Manager..."
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+
+helm upgrade --install cert-manager jetstack/cert-manager \
+  --namespace cert-manager --create-namespace \
+  --set installCRDs=true \
+  --wait --timeout=5m0s
+
+# ----------------------------------------------------------------------------
 echo "--> Deploying Prometheus and Grafana Telemetry Layer..."
 kubectl apply -f monitoring/prometheus-configmap.yaml -n cloudnative-devops
 kubectl apply -f monitoring/prometheus-deployment.yaml -n cloudnative-devops
@@ -98,6 +120,13 @@ kubectl rollout status deployment/prometheus -n cloudnative-devops --timeout=90s
 kubectl apply -f monitoring/grafana-deployment.yaml -n cloudnative-devops
 kubectl apply -f monitoring/grafana-service.yaml -n cloudnative-devops
 kubectl rollout status deployment/grafana -n cloudnative-devops --timeout=90s
+
+# ----------------------------------------------------------------------------
+echo "--> Deploying TLS ClusterIssuer..."
+kubectl apply -f k8s/clusterissuer.yaml
+echo "--> Deploying Ingress Routing Structures..."
+# Target the project namespace explicitly for your multi-service routing rules
+kubectl apply -f k8s/ingress.yaml -n cloudnative-devops
 
 # ----------------------------------------------------------------------------
 # 7. Resilient background port-forwarding engine (With Namespaces Fixed)
