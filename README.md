@@ -241,6 +241,7 @@ kubectl get svc
 4. Access UIs via forwarded ports:
 
 - **FastAPI** → [https://&lt;codespace-id&gt;-30080.app.github.dev/health](https://<codespace-id>-30080.app.github.dev/health)
+- **FastAPI (HTTPS)** → (https://<codespace-id>-8443.app.github.dev/health)(https://<codespace-id>-8443.app.github.dev/health)
 - **Prometheus** → [https://&lt;codespace-id&gt;-9090.app.github.dev](https://<codespace-id>-9090.app.github.dev)
 - **Grafana** → [https://&lt;codespace-id&gt;-3000.app.github.dev](https://<codespace-id>-3000.app.github.dev)
 
@@ -341,6 +342,7 @@ curl localhost:8000/users/
 - ✅ v0.14.0 – Kubernetes baseline cluster
 - ✅ v0.15.0 – Kubernetes advanced services & monitoring
 - ✅ v0.16.0 – Namespace & RBAC
+- ✅ v0.17.0 – Ingress + TLS
 - 🔜 Terraform, AWS EKS
 
 ---

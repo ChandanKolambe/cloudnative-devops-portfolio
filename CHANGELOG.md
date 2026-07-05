@@ -5,6 +5,18 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [v0.17.0] - 2026-07-05
+### Day 17 – Ingress + TLS
+- Installed NGINX Ingress Controller via Helm in `ingress-nginx` namespace.
+- Installed cert-manager with CRDs in `cert-manager` namespace.
+- Created ClusterIssuer (`selfsigned-issuer`) for TLS certificates.
+- Defined Ingress resource (`fastapi-ingress`) with host `fastapi.local` and TLS termination.
+- Issued TLS certificate (`fastapi-tls`) and verified secret creation.
+- Port-forwarded ingress controller service to test HTTPS locally (`curl -vk https://fastapi.local:8443/health`).
+- Validated FastAPI endpoints responding over HTTPS with TLS handshake.
+
+---
+
 ## [v0.16.0] - 2026-07-03
 ### Day 16 – Namespace & RBAC
 - Introduced `cloudnative-devops` namespace for workload isolation.
