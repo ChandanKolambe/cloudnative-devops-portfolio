@@ -5,6 +5,16 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [v0.18.0] - 2026-07-05
+### Day 18 – Liveness & Readiness Probes, Resource Limits
+- Added liveness and readiness probes to FastAPI deployment (`/health` endpoint).
+- Configured probe timings: liveness (delay=10s, period=15s), readiness (delay=5s, period=10s).
+- Demonstrated probe behavior by temporarily setting invalid paths.
+- Verified Service endpoint updates via `kubectl get endpoints fastapi-service`.
+- Reverted probes back to `/health` and confirmed stable `1/1 Ready` pods.
+
+---
+
 ## [v0.17.0] - 2026-07-05
 ### Day 17 – Ingress + TLS
 - Installed NGINX Ingress Controller via Helm in `ingress-nginx` namespace.

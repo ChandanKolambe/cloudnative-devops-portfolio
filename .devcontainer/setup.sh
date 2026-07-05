@@ -93,25 +93,24 @@ kubectl rollout status deployment/fastapi-deployment -n cloudnative-devops --tim
 # Ingress & TLS Infrastructure Layer
 # ----------------------------------------------------------------------------
 echo "--> Deploying NGINX Ingress Controller..."
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx > /dev/null 2>&1
+helm repo update > /dev/null 2>&1
 
 # --upgrade-install makes the helm script re-runnable without errors
 helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx --create-namespace \
-  --wait --timeout=5m0s
+  --timeout=2m0s
 
 echo "--> Deploying Cert-Manager..."
-helm repo add jetstack https://charts.jetstack.io
-helm repo update
+helm repo add jetstack https://charts.jetstack.io > /dev/null 2>&1
+helm repo update > /dev/null 2>&1
 
 helm upgrade --install cert-manager jetstack/cert-manager \
   --namespace cert-manager --create-namespace \
-  --set installCRDs=true \
-  --wait --timeout=5m0s
+  --set crds.enabled=true \
+  --timeout=2m0s
 
-# Mandatory pause for cert-manager admission webhooks to establish stability
-echo "Waiting 15 seconds for Cert-Manager APIs to settle..."
+echo "Waiting 15 seconds for secondary controllers to warm up..."
 sleep 15
 
 # ----------------------------------------------------------------------------
@@ -130,7 +129,6 @@ echo "--> Deploying TLS ClusterIssuer..."
 kubectl apply -f k8s/clusterissuer.yaml
 
 echo "--> Deploying Ingress Routing Structures..."
-# Target the project namespace explicitly for your multi-service routing rules
 kubectl apply -f k8s/ingress.yaml -n cloudnative-devops
 
 # ----------------------------------------------------------------------------
@@ -145,7 +143,7 @@ else
 fi
 
 # ----------------------------------------------------------------------------
-# 7. Resilient background port-forwarding engine (With Namespaces Fixed)
+# 7. Resilient background port-forwarding engine
 # ----------------------------------------------------------------------------
 echo "Initialising background port-forward controller..."
 cat << 'EOF' > /tmp/k8s-port-forward.sh
