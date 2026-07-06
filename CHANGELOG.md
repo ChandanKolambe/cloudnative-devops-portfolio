@@ -5,6 +5,18 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [v0.19.0] - 2026-07-06
+### Day 19 – Horizontal Pod Autoscaler (HPA) with Metrics Server
+- Installed metrics-server in `kube-system` namespace to enable resource metrics.
+- Patched metrics-server deployment with `--kubelet-insecure-tls` for KinD/Codespaces compatibility.
+- Verified metrics availability via `kubectl top nodes` and `kubectl top pods`.
+- Created HPA (`fastapi-hpa`) targeting FastAPI deployment with CPU utilization threshold (50%).
+- Validated HPA scaling behavior:
+  - Scale‑up: replicas increased from 2 → 5 under load (`hey` benchmark).
+  - Scale‑down: replicas decreased back to baseline after load stopped.
+
+---
+
 ## [v0.18.0] - 2026-07-05
 ### Day 18 – Liveness & Readiness Probes, Resource Limits
 - Added liveness and readiness probes to FastAPI deployment (`/health` endpoint).
