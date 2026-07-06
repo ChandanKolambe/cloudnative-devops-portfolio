@@ -59,9 +59,9 @@ fi
 echo "Kubernetes is online!"
 
 # ----------------------------------------------------------------------------
-# 6. Refactored Sequential Deployment Sequence
+# 6. High-Speed Parallel Manifest Triggering
 # ----------------------------------------------------------------------------
-echo "=== Beginning Sequential App & Infrastructure Deployment ==="
+echo "=== Triggering All Deployments In Parallel ==="
 
 echo "--> Applying Namespace and RBAC..."
 kubectl apply -f k8s/namespace.yaml --validate=false
@@ -69,70 +69,65 @@ kubectl apply -f k8s/fastapi-serviceaccount.yaml -n cloudnative-devops
 kubectl apply -f k8s/fastapi-role.yaml -n cloudnative-devops
 kubectl apply -f k8s/fastapi-rolebinding.yaml -n cloudnative-devops
 
-echo "--> Applying ConfigMaps, Secrets, PVCs, Postgres, Redis..."
+echo "--> Triggering App Infrastructure (Postgres, Redis, FastAPI)..."
 kubectl apply -f k8s/configmap.yaml -n cloudnative-devops
 kubectl apply -f k8s/secret.yaml -n cloudnative-devops
 kubectl apply -f k8s/postgres-pvc.yaml -n cloudnative-devops
 kubectl apply -f k8s/postgres-deployment.yaml -n cloudnative-devops
 kubectl apply -f k8s/postgres-service.yaml -n cloudnative-devops
-kubectl rollout status deployment/postgres -n cloudnative-devops --timeout=90s
-
 kubectl apply -f k8s/postgres-test-deployment.yaml -n cloudnative-devops
 kubectl apply -f k8s/postgres-test-service.yaml -n cloudnative-devops
-
 kubectl apply -f k8s/redis-deployment.yaml -n cloudnative-devops
 kubectl apply -f k8s/redis-service.yaml -n cloudnative-devops
-kubectl rollout status deployment/redis -n cloudnative-devops --timeout=90s
-
-echo "--> Deploying FastAPI Application Layer..."
 kubectl apply -f k8s/deployment.yaml -n cloudnative-devops --validate=false
 kubectl apply -f k8s/fastapi-service.yaml -n cloudnative-devops
-kubectl rollout status deployment/fastapi-deployment -n cloudnative-devops --timeout=90s
 
-# ----------------------------------------------------------------------------
-# Ingress & TLS Infrastructure Layer
-# ----------------------------------------------------------------------------
-echo "--> Deploying NGINX Ingress Controller..."
+echo "--> Triggering Helm Extensions (Ingress + Cert-Manager)..."
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx > /dev/null 2>&1
-helm repo update > /dev/null 2>&1
-
-# --upgrade-install makes the helm script re-runnable without errors
-helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
-  --namespace ingress-nginx --create-namespace \
-  --timeout=2m0s
-
-echo "--> Deploying Cert-Manager..."
 helm repo add jetstack https://charts.jetstack.io > /dev/null 2>&1
 helm repo update > /dev/null 2>&1
 
-helm upgrade --install cert-manager jetstack/cert-manager \
-  --namespace cert-manager --create-namespace \
-  --set crds.enabled=true \
-  --timeout=2m0s
+helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace --timeout=2m0s
+helm upgrade --install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --set crds.enabled=true --timeout=2m0s
 
-echo "Waiting 15 seconds for secondary controllers to warm up..."
-sleep 15
-
-# ----------------------------------------------------------------------------
-echo "--> Deploying Prometheus and Grafana Telemetry Layer..."
+echo "--> Triggering Telemetry, Routing & Autoscaling Components..."
 kubectl apply -f monitoring/prometheus-configmap.yaml -n cloudnative-devops
 kubectl apply -f monitoring/prometheus-deployment.yaml -n cloudnative-devops
 kubectl apply -f monitoring/prometheus-service.yaml -n cloudnative-devops
-kubectl rollout status deployment/prometheus -n cloudnative-devops --timeout=90s
-
 kubectl apply -f monitoring/grafana-deployment.yaml -n cloudnative-devops
 kubectl apply -f monitoring/grafana-service.yaml -n cloudnative-devops
-kubectl rollout status deployment/grafana -n cloudnative-devops --timeout=90s
-
-# ----------------------------------------------------------------------------
-echo "--> Deploying TLS ClusterIssuer..."
 kubectl apply -f k8s/clusterissuer.yaml
-
-echo "--> Deploying Ingress Routing Structures..."
 kubectl apply -f k8s/ingress.yaml -n cloudnative-devops
 
+# ADDED: Deploy Horizontal Pod Autoscaler manifest
+if [ -f "k8s/hpa.yaml" ]; then
+  kubectl apply -f k8s/hpa.yaml -n cloudnative-devops
+fi
+
 # ----------------------------------------------------------------------------
-# Automated DNS Routing Mapping
+# ADDED: Idempotent Metrics Server Core Provisioner & Patch Controller
+# ----------------------------------------------------------------------------
+echo "--> Provisioning Kubernetes Metrics Engine API..."
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+echo "--> Applying KinD insecure TLS patches to Metrics Server deployment..."
+kubectl -n kube-system patch deployment metrics-server --type='json' \
+  -p='[{"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--kubelet-insecure-tls"}]'
+
+# ----------------------------------------------------------------------------
+# Sequential Verification Block (Now fast because downloads happen together)
+# ----------------------------------------------------------------------------
+echo "=== Verifying Health and Rollout States ==="
+echo "Waiting for core system workloads to compile..."
+
+kubectl rollout status deployment/postgres -n cloudnative-devops --timeout=3m
+kubectl rollout status deployment/redis -n cloudnative-devops --timeout=3m
+kubectl rollout status deployment/fastapi-deployment -n cloudnative-devops --timeout=3m
+kubectl rollout status deployment/prometheus -n cloudnative-devops --timeout=3m
+kubectl rollout status deployment/grafana -n cloudnative-devops --timeout=3m
+kubectl rollout status deployment/metrics-server -n kube-system --timeout=3m
+
+# ----------------------------------------------------------------------------
+# Automated DNS Routing Mapping & Background Tunnels
 # ----------------------------------------------------------------------------
 echo "--> Verifying Local DNS Routing Mapping..."
 if ! grep -q "fastapi.local" /etc/hosts; then
@@ -142,9 +137,6 @@ else
   echo "DNS entry for fastapi.local already present."
 fi
 
-# ----------------------------------------------------------------------------
-# 7. Resilient background port-forwarding engine
-# ----------------------------------------------------------------------------
 echo "Initialising background port-forward controller..."
 cat << 'EOF' > /tmp/k8s-port-forward.sh
 #!/bin/bash
