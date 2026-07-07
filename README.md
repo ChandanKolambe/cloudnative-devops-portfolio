@@ -8,6 +8,7 @@
 [![Docker](https://img.shields.io/docker/pulls/chandankolambe/fastapi-app)](https://hub.docker.com/r/chandankolambe/fastapi-app)
 ![GHCR](https://img.shields.io/badge/GHCR-published-blue)
 ![Kubernetes](https://img.shields.io/badge/kubernetes-ready-blue)
+![Helm](https://img.shields.io/badge/helm-ready-blue)
 
 **A compact, professional portfolio repository demonstrating a progression from backend fundamentals to production‑grade DevOps: FastAPI, SQLAlchemy, Docker, CI/CD, Kubernetes readiness, Prometheus/Grafana monitoring, and Terraform, AWS EKS.**
 
@@ -345,6 +346,7 @@ curl localhost:8000/users/
 - ✅ v0.17.0 – Ingress + TLS
 - ✅ v0.18.0 – Probes & Resource Limits
 - ✅ v0.19.0 – Horizontal Pod Autoscaler (HPA) with metrics-server
+- ✅ v0.20.0 – Helm chart basics (FastAPI deployment)
 - 🔜 Terraform, AWS EKS
 
 ---

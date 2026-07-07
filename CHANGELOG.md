@@ -5,6 +5,16 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [v0.20.0] - 2026-07-07
+### Day 20 – Helm Chart Basics
+- Created Helm chart (`helm/fastapi`) with `Chart.yaml`, `values.yaml`, and templates for Deployment + Service.
+- Parameterized replicas, image tag, resources, probes, and service configuration via `values.yaml`.
+- Installed chart into `cloudnative-devops` namespace and verified pods running with image `0.20.0`.
+- Validated health endpoint (`/health`) via port-forward and curl.
+- Demonstrated `helm upgrade` workflow by scaling replicas from 2 → 3.
+
+---
+
 ## [v0.19.0] - 2026-07-06
 ### Day 19 – Horizontal Pod Autoscaler (HPA) with Metrics Server
 - Installed metrics-server in `kube-system` namespace to enable resource metrics.
