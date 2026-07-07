@@ -79,8 +79,16 @@ kubectl apply -f k8s/postgres-test-deployment.yaml -n cloudnative-devops
 kubectl apply -f k8s/postgres-test-service.yaml -n cloudnative-devops
 kubectl apply -f k8s/redis-deployment.yaml -n cloudnative-devops
 kubectl apply -f k8s/redis-service.yaml -n cloudnative-devops
-kubectl apply -f k8s/deployment.yaml -n cloudnative-devops --validate=false
-kubectl apply -f k8s/fastapi-service.yaml -n cloudnative-devops
+
+echo "--> Linting and Deploying FastAPI Application via Helm..."
+if [ -d "helm/fastapi" ]; then
+  helm lint helm/fastapi
+  # Runs clean helm install matching your corrected native template structure
+  helm upgrade --install fastapi helm/fastapi \
+    --namespace cloudnative-devops --create-namespace
+else
+  echo "Warning: helm/fastapi chart source directory not found. Skipping."
+fi
 
 echo "--> Triggering Helm Extensions (Ingress + Cert-Manager)..."
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx > /dev/null 2>&1

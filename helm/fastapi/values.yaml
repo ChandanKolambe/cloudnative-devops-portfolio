@@ -29,3 +29,5 @@ probes:
     path: /health
     initialDelaySeconds: 5
     periodSeconds: 10
+
+namespace: cloudnative-devops
