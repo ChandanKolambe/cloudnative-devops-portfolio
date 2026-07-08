@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fastapi-config
+  labels:
+    app: {{ .Release.Name }}
+data:
+  PYTHONPATH: {{ .Values.config.PYTHONPATH | quote }}
+  RUNNING_IN_DOCKER: {{ .Values.config.RUNNING_IN_DOCKER | quote }}
+  DATABASE_URL: {{ .Values.config.DATABASE_URL | quote }}
+  TEST_DATABASE_URL: {{ .Values.config.TEST_DATABASE_URL | quote }}
+  REDIS_URL: {{ .Values.config.REDIS_URL | quote }}

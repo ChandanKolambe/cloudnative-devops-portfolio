@@ -55,15 +55,18 @@ fi
 echo "Kubernetes is ready."
 
 echo "=== Applying app infrastructure ==="
-kubectl apply -f k8s/configmap.yaml -n cloudnative-devops
-kubectl apply -f k8s/secret.yaml -n cloudnative-devops
-kubectl apply -f k8s/postgres-pvc.yaml -n cloudnative-devops
-kubectl apply -f k8s/postgres-deployment.yaml -n cloudnative-devops
-kubectl apply -f k8s/postgres-service.yaml -n cloudnative-devops
-kubectl apply -f k8s/postgres-test-deployment.yaml -n cloudnative-devops
-kubectl apply -f k8s/postgres-test-service.yaml -n cloudnative-devops
-kubectl apply -f k8s/redis-deployment.yaml -n cloudnative-devops
-kubectl apply -f k8s/redis-service.yaml -n cloudnative-devops
+# Ensure the namespace exists so infra manifests can be applied
+kubectl get namespace cloudnative-devops >/dev/null 2>&1 || kubectl create namespace cloudnative-devops
+
+# We let Helm own the app resources (ConfigMap, Secret, Service, Deployment)
+# Apply infra first (Postgres/Redis PVCs and DB services)
+kubectl apply -f k8s/postgres-pvc.yaml -n cloudnative-devops || true
+kubectl apply -f k8s/postgres-deployment.yaml -n cloudnative-devops || true
+kubectl apply -f k8s/postgres-service.yaml -n cloudnative-devops || true
+kubectl apply -f k8s/postgres-test-deployment.yaml -n cloudnative-devops || true
+kubectl apply -f k8s/postgres-test-service.yaml -n cloudnative-devops || true
+kubectl apply -f k8s/redis-deployment.yaml -n cloudnative-devops || true
+kubectl apply -f k8s/redis-service.yaml -n cloudnative-devops || true
 
 kubectl rollout status deployment/postgres -n cloudnative-devops --timeout=3m
 kubectl rollout status deployment/redis -n cloudnative-devops --timeout=3m
@@ -71,9 +74,16 @@ kubectl rollout status deployment/redis -n cloudnative-devops --timeout=3m
 echo "=== Deploying FastAPI via Helm ==="
 if [ -d "helm/fastapi" ]; then
   helm lint helm/fastapi
+  # Clean up any previous release or conflicting resources so Helm can own them
+  helm uninstall fastapi -n cloudnative-devops --ignore-not-found || true
+  kubectl delete deployment fastapi-deployment -n cloudnative-devops --ignore-not-found || true
+  kubectl delete service fastapi-service -n cloudnative-devops --ignore-not-found || true
+  kubectl delete configmap fastapi-config -n cloudnative-devops --ignore-not-found || true
+  kubectl delete secret postgres-secret -n cloudnative-devops --ignore-not-found || true
+
   helm upgrade --install fastapi helm/fastapi \
     --namespace cloudnative-devops --create-namespace \
-    --wait --timeout=5m
+    --wait --rollback-on-failure --timeout=5m
 else
   echo "Warning: helm/fastapi chart source directory not found. Skipping app deployment."
 fi
