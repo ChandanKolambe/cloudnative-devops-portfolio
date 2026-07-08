@@ -54,15 +54,6 @@ fi
 
 echo "Kubernetes is ready."
 
-echo "=== Applying namespace and RBAC resources ==="
-kubectl apply -f k8s/namespace.yaml
-kubectl label namespace cloudnative-devops app.kubernetes.io/managed-by=Helm --overwrite
-kubectl annotate namespace cloudnative-devops meta.helm.sh/release-name=fastapi --overwrite
-kubectl annotate namespace cloudnative-devops meta.helm.sh/release-namespace=cloudnative-devops --overwrite
-kubectl apply -f k8s/fastapi-serviceaccount.yaml -n cloudnative-devops
-kubectl apply -f k8s/fastapi-role.yaml -n cloudnative-devops
-kubectl apply -f k8s/fastapi-rolebinding.yaml -n cloudnative-devops
-
 echo "=== Applying app infrastructure ==="
 kubectl apply -f k8s/configmap.yaml -n cloudnative-devops
 kubectl apply -f k8s/secret.yaml -n cloudnative-devops
