@@ -5,6 +5,19 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [v0.21.0] - 2026-07-08
+### Day 21 – Helm RBAC & Config Management
+- Extended Helm chart (`helm/fastapi`) to include namespace, ServiceAccount, Role, and RoleBinding templates.
+- Added Helm‑managed ConfigMap (`fastapi-config`) and Secret (`postgres-secret`) with values injected from `values.yaml`.
+- Removed manual RBAC/namespace manifests from `setup.sh` to avoid duplication; Helm now owns these resources.
+- Verified FastAPI pods running under `fastapi-sa` with correct RBAC permissions.
+- Confirmed environment variables (`DATABASE_URL`, `TEST_DATABASE_URL`, `REDIS_URL`) injected via Helm ConfigMap/Secret.
+- Demonstrated Helm lifecycle:
+  - `helm upgrade` initially failed due to `.spec.replicas` conflict.
+  - Resolved by uninstalling and reinstalling chart; Deployment scaled successfully to 3 replicas.
+
+---
+
 ## [v0.20.0] - 2026-07-07
 ### Day 20 – Helm Chart Basics
 - Created Helm chart (`helm/fastapi`) with `Chart.yaml`, `values.yaml`, and templates for Deployment + Service.

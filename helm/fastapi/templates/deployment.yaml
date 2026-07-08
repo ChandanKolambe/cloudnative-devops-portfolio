@@ -1,18 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-fastapi-deployment
+  name: {{ .Release.Name }}-deployment
+  namespace: {{ .Values.namespace }}
   labels:
-    app: fastapi
+    app: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: fastapi
+      app: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: fastapi
+        app: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ .Values.serviceAccountName }}
       containers:

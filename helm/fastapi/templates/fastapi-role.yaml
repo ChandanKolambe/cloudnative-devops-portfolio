@@ -1,13 +1,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  namespace: cloudnative-devops
-  name: fastapi-role
+  name: {{ .Release.Name }}-role
+  namespace: {{ .Values.namespace }}
   labels:
     app.kubernetes.io/managed-by: Helm
   annotations:
-    meta.helm.sh/release-name: fastapi
-    meta.helm.sh/release-namespace: cloudnative-devops
+    meta.helm.sh/release-name: {{ .Release.Name }}
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
 rules:
 - apiGroups: [""]
   resources: ["configmaps", "secrets"]
