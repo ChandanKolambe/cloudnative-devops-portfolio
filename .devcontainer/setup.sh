@@ -63,12 +63,6 @@ echo "Kubernetes is online!"
 # ----------------------------------------------------------------------------
 echo "=== Triggering All Deployments In Parallel ==="
 
-echo "--> Applying Namespace and RBAC..."
-
-kubectl apply -f k8s/fastapi-serviceaccount.yaml -n cloudnative-devops
-kubectl apply -f k8s/fastapi-role.yaml -n cloudnative-devops
-kubectl apply -f k8s/fastapi-rolebinding.yaml -n cloudnative-devops
-
 echo "--> Triggering App Infrastructure (Postgres, Redis, FastAPI)..."
 kubectl apply -f k8s/configmap.yaml -n cloudnative-devops
 kubectl apply -f k8s/secret.yaml -n cloudnative-devops
