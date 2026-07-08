@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 echo "=== Initialising Kubernetes Infrastructure ==="
 
@@ -65,7 +65,6 @@ echo "=== Triggering All Deployments In Parallel ==="
 
 echo "--> Applying Namespace and RBAC..."
 
-kubectl apply -f k8s/namespace.yaml --validate=false
 kubectl apply -f k8s/fastapi-serviceaccount.yaml -n cloudnative-devops
 kubectl apply -f k8s/fastapi-role.yaml -n cloudnative-devops
 kubectl apply -f k8s/fastapi-rolebinding.yaml -n cloudnative-devops
@@ -88,7 +87,7 @@ echo "--> Linting and Deploying FastAPI Application via Helm..."
 if [ -d "helm/fastapi" ]; then
   helm lint helm/fastapi
   helm upgrade --install fastapi helm/fastapi \
-    --namespace cloudnative-devops
+    --namespace cloudnative-devops --create-namespace
 else
   echo "Warning: helm/fastapi chart source directory not found. Skipping."
 fi
