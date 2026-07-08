@@ -3,6 +3,11 @@ kind: Role
 metadata:
   namespace: cloudnative-devops
   name: fastapi-role
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    meta.helm.sh/release-name: fastapi
+    meta.helm.sh/release-namespace: cloudnative-devops
 rules:
 - apiGroups: [""]
   resources: ["configmaps", "secrets"]
