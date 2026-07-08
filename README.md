@@ -347,6 +347,7 @@ curl localhost:8000/users/
 - ✅ v0.18.0 – Probes & Resource Limits
 - ✅ v0.19.0 – Horizontal Pod Autoscaler (HPA) with metrics-server
 - ✅ v0.20.0 – Helm chart basics (FastAPI deployment)
+- ✅ v0.21.0 – Helm RBAC & Config Management
 - 🔜 Terraform, AWS EKS
 
 ---
