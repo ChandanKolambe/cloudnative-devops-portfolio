@@ -63,8 +63,17 @@ echo "Kubernetes is online!"
 # ----------------------------------------------------------------------------
 echo "=== Triggering All Deployments In Parallel ==="
 
+echo "--> Linting and Deploying FastAPI Application via Helm..."
+if [ -d "helm/fastapi" ]; then
+  helm lint helm/fastapi
+  helm upgrade --install fastapi helm/fastapi \
+    --namespace cloudnative-devops --create-namespace
+else
+  echo "Warning: helm/fastapi chart source directory not found. Skipping."
+fi
+
 echo "--> Applying Namespace and RBAC..."
-kubectl apply -f k8s/namespace.yaml --validate=false
+
 kubectl apply -f k8s/fastapi-serviceaccount.yaml -n cloudnative-devops
 kubectl apply -f k8s/fastapi-role.yaml -n cloudnative-devops
 kubectl apply -f k8s/fastapi-rolebinding.yaml -n cloudnative-devops
@@ -79,16 +88,6 @@ kubectl apply -f k8s/postgres-test-deployment.yaml -n cloudnative-devops
 kubectl apply -f k8s/postgres-test-service.yaml -n cloudnative-devops
 kubectl apply -f k8s/redis-deployment.yaml -n cloudnative-devops
 kubectl apply -f k8s/redis-service.yaml -n cloudnative-devops
-
-echo "--> Linting and Deploying FastAPI Application via Helm..."
-if [ -d "helm/fastapi" ]; then
-  helm lint helm/fastapi
-  # Runs clean helm install matching your corrected native template structure
-  helm upgrade --install fastapi helm/fastapi \
-    --namespace cloudnative-devops --create-namespace
-else
-  echo "Warning: helm/fastapi chart source directory not found. Skipping."
-fi
 
 echo "--> Triggering Helm Extensions (Ingress + Cert-Manager)..."
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx > /dev/null 2>&1
@@ -129,10 +128,10 @@ echo "Waiting for core system workloads to compile..."
 
 kubectl rollout status deployment/postgres -n cloudnative-devops --timeout=3m
 kubectl rollout status deployment/redis -n cloudnative-devops --timeout=3m
-kubectl rollout status deployment/fastapi-deployment -n cloudnative-devops --timeout=3m
 kubectl rollout status deployment/prometheus -n cloudnative-devops --timeout=3m
 kubectl rollout status deployment/grafana -n cloudnative-devops --timeout=3m
 kubectl rollout status deployment/metrics-server -n kube-system --timeout=3m
+kubectl rollout status deployment/fastapi-deployment -n cloudnative-devops --timeout=3m
 
 # ----------------------------------------------------------------------------
 # Automated DNS Routing Mapping & Background Tunnels
