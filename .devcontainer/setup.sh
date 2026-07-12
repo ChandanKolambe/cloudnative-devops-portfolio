@@ -98,14 +98,25 @@ helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
 helm upgrade --install cert-manager jetstack/cert-manager \
   --namespace cert-manager --create-namespace --set crds.enabled=true --wait --timeout=5m
 
-echo "=== Applying monitoring and routing resources ==="
-kubectl apply -f monitoring/prometheus-configmap.yaml -n cloudnative-devops
-kubectl apply -f monitoring/prometheus-deployment.yaml -n cloudnative-devops
-kubectl apply -f monitoring/prometheus-service.yaml -n cloudnative-devops
-kubectl apply -f monitoring/grafana-deployment.yaml -n cloudnative-devops
-kubectl apply -f monitoring/grafana-service.yaml -n cloudnative-devops
+echo "=== Deploying monitoring stack via Helm ==="
+if [ -d "charts/monitoring" ]; then
+  helm lint charts/monitoring
+  helm uninstall monitoring -n cloudnative-devops --ignore-not-found || true
+  kubectl delete deployment prometheus -n cloudnative-devops --ignore-not-found || true
+  kubectl delete service prometheus -n cloudnative-devops --ignore-not-found || true
+  kubectl delete deployment grafana -n cloudnative-devops --ignore-not-found || true
+  kubectl delete service grafana -n cloudnative-devops --ignore-not-found || true
+
+  helm upgrade --install monitoring charts/monitoring \
+    --namespace cloudnative-devops --create-namespace \
+    --wait --rollback-on-failure --timeout=5m
+else
+  echo "Warning: charts/monitoring chart source directory not found. Skipping monitoring deployment."
+fi
+
 kubectl apply -f k8s/clusterissuer.yaml
 kubectl apply -f k8s/ingress.yaml -n cloudnative-devops
+
 
 if [ -f "k8s/hpa.yaml" ]; then
   kubectl apply -f k8s/hpa.yaml -n cloudnative-devops
