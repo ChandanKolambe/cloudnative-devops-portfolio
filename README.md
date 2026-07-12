@@ -10,7 +10,7 @@
 ![Kubernetes](https://img.shields.io/badge/kubernetes-ready-blue)
 ![Helm](https://img.shields.io/badge/helm-ready-blue)
 
-**A compact, professional portfolio repository demonstrating a progression from backend fundamentals to production‑grade DevOps: FastAPI, SQLAlchemy, Docker, CI/CD, Kubernetes readiness, Prometheus/Grafana monitoring, and Terraform, AWS EKS.**
+**A compact, professional portfolio repository demonstrating a progression from backend fundamentals to production-grade DevOps: FastAPI, SQLAlchemy, Docker, CI/CD, Helm-native Kubernetes deployments, Prometheus/Grafana observability, and security-first infrastructure automation.**
 
 ---
 
@@ -18,7 +18,7 @@
 
 * **Live demo (local)**: http://127.0.0.1:8000
   
-* **Wiki (detailed day-by-day evidence)**: https://github.com//cloudnative-devops-portfolio/wiki
+* **Wiki (detailed day-by-day evidence)**: https://github.com/ChandanKolambe/cloudnative-devops-portfolio/wiki
   
 * **Branching**: feature branches → dev → main
 
@@ -36,9 +36,9 @@ This repository documents a step‑by‑step learning and implementation path. E
   
 * **Containerization**: Docker, docker‑compose, Docker Hub (registry), GitHub Container Registry (GHCR)
 
-* **Orchestration**: Kubernetes (Kind cluster, Pods, Deployments, Services)
+* **Orchestration**: Helm-native Kubernetes deployment on Kind with Helm charts for infra, app, and monitoring
   
-* **Observability**: Prometheus client middleware with /metrics endpoint, Prometheus, Grafana dashboards
+* **Observability**: Prometheus client middleware with /metrics endpoint, Prometheus, Grafana dashboards, and service-level monitoring
 
 * **Healthcheck**: FastAPI /health endpoint integrated with Docker health probes
   
@@ -93,8 +93,14 @@ cd cloudnative-devops-portfolio
 **2\. Python virtual environment**
 
 ```
-python -m venv venv
-venv\Scripts\Activate.ps1
+python -m venv .venv
+source .venv/bin/activate
+```
+
+For PowerShell on Windows:
+
+```
+.\.venv\Scripts\Activate.ps1
 ```
 
 **3\. Install**
@@ -111,77 +117,80 @@ uvicorn app.main:app --reload
 
 Visit http://127.0.0.1:8000 and API docs at http://127.0.0.1:8000/docs.
 
+> Note: the full stack is deployed via Helm/Kind. Local developer mode is useful for API and unit test iteration.
+
 ---
 
-### Quickstart — Docker (recommended for full stack)
+### Quickstart — Kubernetes (recommended for full stack)
 
-**1\. Build and start**
+**1\. Bootstrap the devcontainer and KinD cluster**
 
 ```
-docker-compose up --build
+.devcontainer/setup.sh
 ```
 
-**2\. Services and ports**
-
+**2\. Verify services and ports**
 
 | Service | Port |
 | :--- | :--- |
-| FastAPI (web) | 8000 |
+| FastAPI | 8000 |
 | Prometheus | 9090 |
 | Grafana | 3000 |
-| Postgres (dev) | 5432 |
-| Postgres (test) | 5433 |
-| Redis | 6379 |
+| FastAPI HTTPS | 8443 |
 
-**3. Test endpoints**
+**3\. Test endpoints**
 
 - Health check:
   ```bash
-  curl localhost:8000/health
+  curl http://localhost:8000/health
   # {"status":"ok"}
   ```
 - User CRUD:
   ```bash
-  curl -X POST localhost:8000/users/ -H "Content-Type: application/json" \
+  curl -X POST http://localhost:8000/users/ -H "Content-Type: application/json" \
   -d '{"name":"Test","email":"test@example.com"}'
-  curl localhost:8000/users/
+  curl http://localhost:8000/users/
   ```
 - Metrics:
   ```bash
-  curl localhost:8000/metrics
-  ```
-- Redis background tasks:
-  ```bash
-  curl -X POST localhost:8000/send-task/ -d "msg=Hello"
-  curl localhost:8000/messages/
+  curl http://localhost:8000/metrics
   ```
 
 **4\. Apply migrations**
 
 ```
-docker-compose run web alembic upgrade head
-docker-compose run -e APP_ENV=test web alembic upgrade head
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+alembic upgrade head
 ```
 
-**5\. Run tests (inside Docker)**
+**5\. Run tests**
 
 ```
-docker-compose run -e APP_ENV=test web pytest -v
+pytest -v
 ```
 
-**6\. Build & Push Image (Docker Hub)**
+**6\. Optional: build a Docker image**
+
+```
+docker build -t fastapi-app:latest .
+```
+
+This repository deploys the full stack using Helm charts under `charts/infra`, `charts/fastapi`, and `charts/monitoring`.
+
 
 Build locally:
 ```
 docker build -t chandankolambe/fastapi-app:latest .
 ```
-Push to Docker Hub
+Push to Docker Hub (optional):
 
 ```bash
 docker login
 docker push chandankolambe/fastapi-app:latest
 ```
-Run directly from Docker Hub
+Run directly from Docker Hub (optional):
 ```bash
 docker run -p 8000:8000 chandankolambe/fastapi-app:latest
 ```
@@ -217,14 +226,15 @@ Images are automatically scanned with Trivy during CI/CD to detect vulnerabiliti
 
 ---
 
-### Quickstart — GitHub Codespaces (Kubernetes)
+### Quickstart — GitHub Codespaces (Helm)
 
 This project includes a `devcontainer.json` and `.devcontainer/setup.sh` that automatically:
 
 - Installs `kubectl`, `kind`, and `helm`
 - Creates a local KinD cluster (`cloudnative-cluster`)
-- Applies all manifests in `k8s/` and `monitoring/`
-- Starts port-forwarding for Prometheus (`9090`) and Grafana (`3000`)
+- Deploys Helm charts from `charts/infra`, `charts/fastapi`, and `charts/monitoring`
+- Installs `ingress-nginx`, `cert-manager`, and `metrics-server` via Helm
+- Starts local port-forwarding for FastAPI, Prometheus, Grafana, and HTTPS access
 - Namespace isolation (`cloudnative-devops`)
 - RBAC with `fastapi-sa` ServiceAccount
 - Images pulled from GHCR (`app:<version>`)
@@ -232,19 +242,19 @@ This project includes a `devcontainer.json` and `.devcontainer/setup.sh` that au
 #### Steps:
 
 1. Open the repo in GitHub Codespaces.
-2. Wait for the post-create setup to finish (cluster + manifests applied).
+2. Wait for the post-create setup to finish (cluster + Helm deployments completed).
 3. Verify pods and services:
 
 ```bash
-kubectl get pods
-kubectl get svc
+kubectl get pods -n cloudnative-devops
+kubectl get svc -n cloudnative-devops
 ```
 4. Access UIs via forwarded ports:
 
-- **FastAPI** → [https://&lt;codespace-id&gt;-30080.app.github.dev/health](https://<codespace-id>-30080.app.github.dev/health)
-- **FastAPI (HTTPS)** → (https://<codespace-id>-8443.app.github.dev/health)(https://<codespace-id>-8443.app.github.dev/health)
-- **Prometheus** → [https://&lt;codespace-id&gt;-9090.app.github.dev](https://<codespace-id>-9090.app.github.dev)
-- **Grafana** → [https://&lt;codespace-id&gt;-3000.app.github.dev](https://<codespace-id>-3000.app.github.dev)
+- **FastAPI** → http://localhost:8000
+- **FastAPI (HTTPS)** → https://fastapi.local:8443/health
+- **Prometheus** → http://localhost:9090
+- **Grafana** → http://localhost:3000
 
 ---
 
@@ -277,34 +287,28 @@ env_files =
 
 ```
 python -m pytest -v
-# or inside docker
-docker-compose run -e APP_ENV=test web pytest -v
+# or inside the devcontainer with Helm/Kind deployments
+pytest -v
 ```
 
-**Manual validation (example Day 10)**
+**Manual validation (current Helm workflow)**
 
-1.  Insert a test user:
+1.  Verify the cluster and namespace:
 
 ```
-docker exec -it cloudnative-devops-portfolio-db-1 psql -U postgres -d portfolio_db
-
-# inside psql
-INSERT INTO users (name, email) VALUES ('TestUser', 'test@example.com');
-\q
+kubectl get pods -n cloudnative-devops
+kubectl get svc -n cloudnative-devops
 ```
 
-2.  Verify API:
-  
+2.  Verify API using forwarded FastAPI service:
+
 ```
-curl localhost:8000/users/
-# expected JSON includes TestUser
+curl http://localhost:8000/users/
 ```
 
 3.  Verify monitoring:
-  
 
 * Prometheus targets: http://localhost:9090/targets → **fastapi** job **UP**
-  
 * Grafana: http://localhost:3000 → dashboard panels update after hitting /users/
 
 ---
@@ -313,13 +317,14 @@ curl localhost:8000/users/
 
 **What runs in CI**
 
-* Docker build
+* Docker image build
   
 * Trivy security scan
   
 * pytest (lightweight or CI‑safe tests)
   
-
+* Helm chart linting and Kubernetes readiness checks
+  
 **Notes**
 
 * DB‑dependent tests are run locally or in Codespaces. CI uses environment flags to skip heavy DB tests where appropriate.
@@ -348,7 +353,7 @@ curl localhost:8000/users/
 - ✅ v0.19.0 – Horizontal Pod Autoscaler (HPA) with metrics-server
 - ✅ v0.20.0 – Helm chart basics (FastAPI deployment)
 - ✅ v0.21.0 – Helm RBAC & Config Management
-- 🔜 Terraform, AWS EKS
+- 🔜 future: infrastructure as code expansion (Terraform / managed Kubernetes)
 
 ---
 
