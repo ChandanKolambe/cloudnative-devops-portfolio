@@ -14,16 +14,35 @@ running_in_docker = os.getenv("RUNNING_IN_DOCKER", "false").lower() == "true"
 print("App Env:", app_env)
 print("Running in Docker:", running_in_docker)
 
-if app_env == "test":
-    DATABASE_URL = DOCKER_TEST_DB_URL if running_in_docker else LOCAL_TEST_DB_URL
-else:
-    DATABASE_URL = os.getenv(
-        "DATABASE_URL",
-        DOCKER_DEFAULT_DB_URL if running_in_docker else LOCAL_DEFAULT_DB_URL
-    )
 
+def _get_database_url() -> str:
+    configured_url = os.getenv("DATABASE_URL")
+    if configured_url:
+        return configured_url
+
+    if app_env == "test":
+        if running_in_docker:
+            return DOCKER_TEST_DB_URL
+
+        try:
+            import psycopg2
+
+            conn = psycopg2.connect(LOCAL_TEST_DB_URL)
+            conn.close()
+            return LOCAL_TEST_DB_URL
+        except Exception:
+            return "sqlite:///./test.db"
+
+    return DOCKER_DEFAULT_DB_URL if running_in_docker else LOCAL_DEFAULT_DB_URL
+
+
+DATABASE_URL = _get_database_url()
 print("Using DB:", DATABASE_URL)
 
-engine = create_engine(DATABASE_URL)
+engine_kwargs = {}
+if DATABASE_URL.startswith("sqlite"):
+    engine_kwargs["connect_args"] = {"check_same_thread": False}
+
+engine = create_engine(DATABASE_URL, **engine_kwargs)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()

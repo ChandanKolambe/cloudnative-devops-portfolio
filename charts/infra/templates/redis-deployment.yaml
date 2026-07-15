@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
+  namespace: {{ .Values.namespace }}
   labels:
     app: redis
 spec:
@@ -16,7 +17,7 @@ spec:
     spec:
       containers:
       - name: redis
-        image: redis:7
+        image: {{ .Values.redis.image | quote }}
         ports:
         - containerPort: 6379
         volumeMounts:

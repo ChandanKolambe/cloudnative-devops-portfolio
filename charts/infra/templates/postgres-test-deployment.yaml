@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres-test
+  namespace: {{ .Values.namespace }}
   labels:
     app: postgres-test
 spec:
@@ -16,12 +17,12 @@ spec:
     spec:
       containers:
       - name: postgres-test
-        image: postgres:15
+        image: {{ .Values.postgres.image | quote }}
         env:
         - name: POSTGRES_USER
-          value: postgres
+          value: {{ .Values.postgres.user | quote }}
         - name: POSTGRES_PASSWORD
-          value: postgres
+          value: {{ .Values.postgres.password | quote }}
         - name: POSTGRES_DB
           value: portfolio_test_db
         ports:
