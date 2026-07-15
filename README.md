@@ -353,6 +353,7 @@ curl http://localhost:8000/users/
 - ✅ v0.19.0 – Horizontal Pod Autoscaler (HPA) with metrics-server
 - ✅ v0.20.0 – Helm chart basics (FastAPI deployment)
 - ✅ v0.21.0 – Helm RBAC & Config Management
+- ✅ v0.22.0 – Observability & Security in Helm
 - 🔜 future: infrastructure as code expansion (Terraform / managed Kubernetes)
 
 ---
