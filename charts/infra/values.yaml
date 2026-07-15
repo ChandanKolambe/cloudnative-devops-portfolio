@@ -16,6 +16,7 @@ postgres:
 
 redis:
   image: redis:7
+  storage: 1Gi
 
 ingress:
   enabled: true
