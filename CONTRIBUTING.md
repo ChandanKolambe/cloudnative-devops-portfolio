@@ -17,7 +17,7 @@ We welcome contributions in the form of:
 
 ## Pull Request Process
 1. Fork the repo and create a feature branch.
-2. Ensure code builds locally and in Docker.
+2. Ensure code builds locally and with container tooling.
 3. Run tests (`pytest -v`).
 4. Lint and format code before committing.
 5. Update documentation (README + Wiki).
@@ -38,7 +38,8 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 ## Testing
 - All new code must include unit tests where applicable.
 - Run `pytest -v` locally before opening a PR.
-- Integration tests (Postgres, Redis) should be validated in Docker Compose.
+- Integration tests (Postgres, Redis) should be validated with the Helm/Kind workflow or Docker Compose when local compatibility is required.
+- Helm chart changes should be validated with `helm lint` and functional deployment checks.
 
 ## Linting & Formatting
 - Use `black` for Python formatting.

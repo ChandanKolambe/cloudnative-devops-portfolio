@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
+  namespace: {{ .Values.namespace }}
   labels:
     app: postgres
 spec:
@@ -16,14 +17,14 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:15
+        image: {{ .Values.postgres.image | quote }}
         env:
         - name: POSTGRES_USER
-          value: postgres
+          value: {{ .Values.postgres.user | quote }}
         - name: POSTGRES_PASSWORD
-          value: postgres
+          value: {{ .Values.postgres.password | quote }}
         - name: POSTGRES_DB
-          value: portfolio_db
+          value: {{ .Values.postgres.db | quote }}
         ports:
         - containerPort: 5432
         livenessProbe:
@@ -37,12 +38,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
         resources:
-          requests:
-            cpu: "100m"
-            memory: "256Mi"
-          limits:
-            cpu: "250m"
-            memory: "512Mi"
+{{ toYaml .Values.postgres.resources | indent 10 }}
         volumeMounts:
         - name: postgres-storage
           mountPath: /var/lib/postgresql/data

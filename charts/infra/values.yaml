@@ -1,0 +1,38 @@
+namespace: cloudnative-devops
+
+postgres:
+  image: postgres:15
+  storage: 1Gi
+  user: postgres
+  password: postgres
+  db: portfolio_db
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "250m"
+      memory: "512Mi"
+
+redis:
+  image: redis:7
+
+ingress:
+  enabled: true
+  host: fastapi.local
+  ingressClassName: nginx
+  tls:
+    secretName: fastapi-tls
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50
+
+clusterIssuer:
+  enabled: true
+  name: selfsigned-issuer
+
+metricsServer:
+  enabled: true

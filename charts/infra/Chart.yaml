@@ -1,0 +1,5 @@
+apiVersion: v2
+name: infra
+description: Infrastructure Helm chart for Postgres, Redis, Ingress, HPA, and cluster tooling
+version: 0.1.0
+appVersion: "1.0"
