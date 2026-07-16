@@ -148,12 +148,21 @@ install_metrics_server
 
 ensure_namespace cloudnative-devops
 
+echo "=== Preparing local storage paths for hostPath volumes ==="
+for node in $(kind get nodes --name cloudnative-cluster 2>/dev/null || true); do
+  docker exec "$node" mkdir -p /data/postgres /data/redis >/dev/null 2>&1 || true
+done
+
 echo "=== Deploying Helm infrastructure ==="
 if [ -d "charts/infra" ]; then
   helm lint charts/infra
   if ! helm status infra -n cloudnative-devops >/dev/null 2>&1; then
     echo "Cleaning unmanaged infra resources before installing infra chart..."
     kubectl delete clusterissuer selfsigned-issuer --ignore-not-found=true || true
+    kubectl delete pvc postgres-pvc redis-pvc -n cloudnative-devops --ignore-not-found=true || true
+    kubectl delete pv postgres-pv redis-pv --ignore-not-found=true || true
+    kubectl delete statefulset postgres -n cloudnative-devops --ignore-not-found=true || true
+    kubectl delete deployment redis -n cloudnative-devops --ignore-not-found=true || true
   fi
   helm upgrade --install infra charts/infra     --namespace cloudnative-devops --create-namespace     --wait --rollback-on-failure --timeout=5m
 else
@@ -177,7 +186,7 @@ else
 fi
 
 echo "=== Verifying rollout status ==="
-kubectl rollout status deployment/postgres -n cloudnative-devops --timeout=3m
+kubectl rollout status statefulset/postgres -n cloudnative-devops --timeout=3m
 kubectl rollout status deployment/redis -n cloudnative-devops --timeout=3m
 
 nohup /tmp/k8s-port-forward.sh >/tmp/k8s-port-forward.log 2>&1 &

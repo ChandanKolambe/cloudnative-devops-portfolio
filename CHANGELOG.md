@@ -5,6 +5,26 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [v0.23.0] - 2026-07-16
+### Day 23 – Stateful Storage Labs
+- Added Kubernetes PersistentVolume definitions for PostgreSQL and Redis using hostPath-backed volumes for local KinD/Codespaces labs.
+- Introduced PVC-backed storage for Redis and a StatefulSet-based Postgres deployment to demonstrate stateful workload patterns.
+- Updated the infra Helm chart values to configure storage sizes for both services.
+- Explicitly bound PVCs to the manual hostPath-backed PVs for deterministic local lab behavior.
+- Documented that this lab uses local hostPath storage and is therefore a learning-oriented substitute for cloud CSI-backed storage.
+- Verified the storage setup aligns with Kubernetes best practices for stateful applications and persistent data.
+
+---
+
+## [v0.22.0] - 2026-07-15
+### Day 22 – Observability & Security Improvements
+- Hardened the FastAPI application with secure health checks and improved metrics exposure.
+- Added Helm-based monitoring services for Prometheus and Grafana.
+- Updated the devcontainer and setup flow to support smoother local cluster bootstrap and port-forwarding.
+- Simplified the infrastructure chart layout by moving manifests into the Helm-based charts structure.
+
+---
+
 ## [v0.21.0] - 2026-07-08
 ### Day 21 – Helm RBAC & Config Management
 - Extended Helm chart (`helm/fastapi`) to include namespace, ServiceAccount, Role, and RoleBinding templates.
