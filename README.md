@@ -37,6 +37,8 @@ This repository documents a step‑by‑step learning and implementation path. E
 * **Containerization**: Docker, docker‑compose, Docker Hub (registry), GitHub Container Registry (GHCR)
 
 * **Orchestration**: Helm-native Kubernetes deployment on Kind with Helm charts for infra, app, and monitoring
+
+* **Storage**: Kubernetes PersistentVolumes (PV), PersistentVolumeClaims (PVC), StatefulSets
   
 * **Observability**: Prometheus client middleware with /metrics endpoint, Prometheus, Grafana dashboards, and service-level monitoring
 
@@ -69,6 +71,8 @@ This README is intentionally concise. Detailed day‑by‑day evidence, logs, an
 **Infrastructure & DevOps**
 
 * Docker, docker‑compose, Kubernetes (Kind), GitHub Actions, Trivy (security scan)
+
+* Kubernetes (Kind) with Helm charts for infra, app, monitoring, and storage (PVs, PVCs, StatefulSets)
   
 * Prometheus, Grafana (monitoring)
   
@@ -354,6 +358,7 @@ curl http://localhost:8000/users/
 - ✅ v0.20.0 – Helm chart basics (FastAPI deployment)
 - ✅ v0.21.0 – Helm RBAC & Config Management
 - ✅ v0.22.0 – Observability & Security in Helm
+- ✅ v0.23.0 – Storage labs (PVs, PVCs, StatefulSets)
 - 🔜 future: infrastructure as code expansion (Terraform / managed Kubernetes)
 
 ---
