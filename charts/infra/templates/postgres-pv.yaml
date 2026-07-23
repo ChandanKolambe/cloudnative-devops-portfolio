@@ -2,11 +2,23 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: postgres-pv
+  labels:
+    storage-target: postgres
 spec:
-  storageClassName: ""
   capacity:
     storage: {{ .Values.postgres.storage | quote }}
+  volumeMode: Filesystem
   accessModes:
-    - ReadWriteOnce
-  hostPath:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  local:
     path: /data/postgres
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - cloudnative-cluster-control-plane

@@ -19,6 +19,8 @@ spec:
         runAsUser: 999
         runAsGroup: 999
         fsGroup: 999
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: postgres
         image: {{ .Values.postgres.image | quote }}
@@ -34,6 +36,8 @@ spec:
           value: {{ .Values.postgres.password | quote }}
         - name: POSTGRES_DB
           value: {{ .Values.postgres.db | quote }}
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
         ports:
         - containerPort: 5432
         volumeMounts:
@@ -45,6 +49,9 @@ spec:
     spec:
       storageClassName: ""
       accessModes: [ "ReadWriteOnce" ]
+      selector:
+        matchLabels:
+          storage-target: postgres
       resources:
         requests:
           storage: {{ .Values.postgres.storage }}
