@@ -5,6 +5,18 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [v0.24.0] - 2026-07-23
+### Day 24 – Security Hardening (PSS, SecurityContexts & NetworkPolicies)
+- Enforced the Kubernetes Baseline PodSecurityStandard profile on the `cloudnative-devops` namespace to block privileged container execution.
+- Hardened workloads (`fastapi`, `postgres`, `postgres-test`, `redis`) with strict unprivileged `securityContext` settings, forcing containers to execute as non-root users (`999` / `10001`) and drop `ALL` capabilities.
+- Implemented a `RuntimeDefault` seccompProfile configuration across application pod specifications to safely filter Linux system calls.
+- Resolved PostgreSQL root initialization permission errors (`Operation not permitted`) under non-root execution by injecting the custom `PGDATA` directory environment variable.
+- Created a `default-deny-ingress` NetworkPolicy rule to implement a true least-privilege microsegmentation posture inside the workspace.
+- Configured dedicated allow-ingress NetworkPolicy resources to explicitly authorize path traffic from the NGINX Ingress Controller, local host port-forwards, and the FastAPI application layer straight to backend databases.
+- Streamlined the infrastructure Helm chart architecture by removing conflicting standalone `postgres-pvc` and `redis-pvc` manifests, routing storage explicitly through unique PersistentVolume matching label selectors.
+
+---
+
 ## [v0.23.0] - 2026-07-16
 ### Day 23 – Stateful Storage Labs
 - Added Kubernetes PersistentVolume definitions for PostgreSQL and Redis using hostPath-backed volumes for local KinD/Codespaces labs.

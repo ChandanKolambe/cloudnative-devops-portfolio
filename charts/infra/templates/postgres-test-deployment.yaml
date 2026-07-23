@@ -15,9 +15,21 @@ spec:
       labels:
         app: postgres-test
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: postgres-test
         image: {{ .Values.postgres.image | quote }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
         env:
         - name: POSTGRES_USER
           value: {{ .Values.postgres.user | quote }}
@@ -25,6 +37,8 @@ spec:
           value: {{ .Values.postgres.password | quote }}
         - name: POSTGRES_DB
           value: portfolio_test_db
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata  # Fixes the 'Operation not permitted' error
         ports:
         - containerPort: 5432
         volumeMounts:

@@ -97,6 +97,11 @@ ensure_namespace() {
   if ! kubectl get namespace "$ns" >/dev/null 2>&1; then
     kubectl create namespace "$ns"
   fi
+  
+  echo "Applying Pod Security Standards to $ns..."
+  #kubectl label namespace "$ns" pod-security.kubernetes.io/enforce=baseline --overwrite
+  #kubectl label namespace "$ns" pod-security.kubernetes.io/warn=restricted --overwrite
+  kubectl label namespace "$ns" pod-security.kubernetes.io/enforce=baseline pod-security.kubernetes.io/warn=restricted --overwrite
 }
 
 cat > /tmp/k8s-port-forward.sh <<'EOF'
@@ -164,7 +169,10 @@ if [ -d "charts/infra" ]; then
     kubectl delete statefulset postgres -n cloudnative-devops --ignore-not-found=true || true
     kubectl delete deployment redis -n cloudnative-devops --ignore-not-found=true || true
   fi
-  helm upgrade --install infra charts/infra     --namespace cloudnative-devops --create-namespace     --wait --rollback-on-failure --timeout=5m
+  #helm upgrade --install infra charts/infra     --namespace cloudnative-devops --create-namespace     --wait --rollback-on-failure --timeout=5m
+  helm upgrade --install infra charts/infra \
+    --namespace cloudnative-devops --create-namespace \
+    --wait --timeout=5m
 else
   echo "Warning: charts/infra chart source directory not found. Skipping infrastructure deployment."
 fi
