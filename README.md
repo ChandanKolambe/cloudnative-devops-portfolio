@@ -39,6 +39,8 @@ This repository documents a step‑by‑step learning and implementation path. E
 * **Orchestration**: Helm-native Kubernetes deployment on Kind with Helm charts for infra, app, and monitoring
 
 * **Storage**: Kubernetes PersistentVolumes (PV), PersistentVolumeClaims (PVC), StatefulSets
+
+* **Cluster Security**: Namespace-level Pod Security Standards (Baseline profile), explicit non-root SecurityContext configuration (UID 999/10001), dropped Linux capabilities (`ALL`), RuntimeDefault seccomp profiles, and least-privilege zero-trust microsegmentation via native Kubernetes NetworkPolicies.
   
 * **Observability**: Prometheus client middleware with /metrics endpoint, Prometheus, Grafana dashboards, and service-level monitoring
 
@@ -240,6 +242,8 @@ This project includes a `devcontainer.json` and `.devcontainer/setup.sh` that au
 - Installs `ingress-nginx`, `cert-manager`, and `metrics-server` via Helm
 - Starts local port-forwarding for FastAPI, Prometheus, Grafana, and HTTPS access
 - Namespace isolation (`cloudnative-devops`)
+- Enforces Pod Security Standards (Baseline profile) with strict warning profiles
+- Binds workloads via native NetworkPolicies to prevent unauthorized cross-pod traffic
 - RBAC with `fastapi-sa` ServiceAccount
 - Images pulled from GHCR (`app:<version>`)
 
@@ -359,6 +363,7 @@ curl http://localhost:8000/users/
 - ✅ v0.21.0 – Helm RBAC & Config Management
 - ✅ v0.22.0 – Observability & Security in Helm
 - ✅ v0.23.0 – Storage labs (PVs, PVCs, StatefulSets)
+- ✅ v0.24.0 – Security labs (Pod Security Standards, Security Contexts, Network Policies)
 - 🔜 future: infrastructure as code expansion (Terraform / managed Kubernetes)
 
 ---
