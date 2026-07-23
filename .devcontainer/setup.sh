@@ -97,6 +97,10 @@ ensure_namespace() {
   if ! kubectl get namespace "$ns" >/dev/null 2>&1; then
     kubectl create namespace "$ns"
   fi
+  
+  echo "Applying Pod Security Standards to $ns..."
+  kubectl label namespace "$ns" pod-security.kubernetes.io/enforce=baseline --overwrite
+  kubectl label namespace "$ns" pod-security.kubernetes.io/warn=restricted --overwrite
 }
 
 cat > /tmp/k8s-port-forward.sh <<'EOF'
