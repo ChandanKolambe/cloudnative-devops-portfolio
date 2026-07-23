@@ -1,0 +1,71 @@
+# 1. Isolation: Default Deny All Ingress Traffic inside the namespace
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+
+---
+# 2. Allow FastAPI to accept traffic from outside (Ingress Controller) and your local Port-Forwards
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-fastapi-ingress
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: fastapi  # Matches release name tracking; adjust if your selector evaluates differently
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: ingress-nginx
+    - podSelector: {} # Allows port-forwarding scripts from host/control-plane nodes
+    ports:
+    - protocol: TCP
+      port: 8000
+
+---
+# 3. Allow Postgres to only accept traffic originating from FastAPI
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-postgres-from-fastapi
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: fastapi
+    ports:
+    - protocol: TCP
+      port: 5432
+
+---
+# 4. Allow Redis to only accept traffic originating from FastAPI
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-redis-from-fastapi
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: redis
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: fastapi
+    ports:
+    - protocol: TCP
+      port: 6379

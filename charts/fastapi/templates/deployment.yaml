@@ -16,10 +16,21 @@ spec:
         app: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ .Values.serviceAccountName }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
       containers:
       - name: fastapi
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: false  # Change to true if your FastAPI app writes nowhere except /tmp
         ports:
         - containerPort: {{ .Values.service.port }}
         livenessProbe:
