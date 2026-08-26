@@ -3,8 +3,6 @@ name: Publish Docker image
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build-and-push:
@@ -31,7 +29,8 @@ jobs:
         with:
           image-ref: ghcr.io/chandankolambe/cloudnative-devops-portfolio/app:latest
           format: 'table'
-          exit-code: '0'
+          exit-code: '1'
+          severity: 'HIGH,CRITICAL'
           ignore-unfixed: true
 
       - name: Push image
