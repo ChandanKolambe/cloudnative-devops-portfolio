@@ -7,9 +7,11 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
@@ -18,7 +20,19 @@ jobs:
         run: docker build -t portfolio-app:ci .
 
       - name: Run tests inside container
-        run: docker run -e APP_ENV=test -e PYTHONPATH=/app -e CI=true portfolio-app:ci pytest
+        run: docker run -e APP_ENV=test -e DATABASE_URL=sqlite:////tmp/ci.db -e PYTHONPATH=/app portfolio-app:ci pytest -v -p no:cacheprovider
+
+      - name: Lint Helm charts
+        run: |
+          helm lint charts/infra
+          helm lint charts/fastapi
+          helm lint charts/monitoring
+
+      - name: Render Helm charts
+        run: |
+          helm template infra charts/infra > /tmp/infra.yaml
+          helm template fastapi charts/fastapi > /tmp/fastapi.yaml
+          helm template monitoring charts/monitoring > /tmp/monitoring.yaml
 
       - name: Scan Docker image with Trivy
         uses: aquasecurity/trivy-action@master
