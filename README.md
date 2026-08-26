@@ -331,13 +331,16 @@ curl http://localhost:8000/users/
   
 * pytest (lightweight or CI‑safe tests)
   
-* Helm chart linting and Kubernetes readiness checks
+* Helm linting and chart rendering for the infra, application, and monitoring charts
   
 **Notes**
 
 * DB‑dependent tests are run locally or in Codespaces. CI uses environment flags to skip heavy DB tests where appropriate.
   
 * Keep CI green by separating fast unit tests from integration tests that require Postgres.
+
+The next delivery milestone is a separate infrastructure-as-code branch that will provision
+an AWS staging environment and deploy an immutable image through Helm.
 
 ---
 
