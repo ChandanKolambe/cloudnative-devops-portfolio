@@ -3,6 +3,13 @@
 All notable changes to this project will be documented here.  
 This project follows [Semantic Versioning](https://semver.org/).
 
+## [v0.26.0] - 2026-08-27
+### Day 25 - Terraform Introduction and CI Publishing Fix
+- Added a Terraform foundation with constrained `local` and placeholder AWS providers.
+- Generated and committed `.terraform.lock.hcl` for reproducible provider installation.
+- Documented the local-versus-AWS scope and basic Terraform validation commands.
+- Fixed Docker publishing workflow order so the image is pushed before the Trivy scan runs.
+
 ---
 
 ## [v0.24.0] - 2026-07-23

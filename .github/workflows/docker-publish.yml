@@ -24,6 +24,13 @@ jobs:
           docker build -t $IMAGE_BASE:latest .
           docker tag $IMAGE_BASE:latest $IMAGE_BASE:${{ github.sha }}
 
+      - name: Push image
+        run: |
+          IMAGE_BASE=ghcr.io/${{ github.repository }}/app
+          IMAGE_BASE=$(echo $IMAGE_BASE | tr '[:upper:]' '[:lower:]')
+          docker push $IMAGE_BASE:latest
+          docker push $IMAGE_BASE:${{ github.sha }}
+
       - name: Security scan with Trivy
         uses: aquasecurity/trivy-action@master
         with:
@@ -32,10 +39,3 @@ jobs:
           exit-code: '1'
           severity: 'HIGH,CRITICAL'
           ignore-unfixed: true
-
-      - name: Push image
-        run: |
-          IMAGE_BASE=ghcr.io/${{ github.repository }}/app
-          IMAGE_BASE=$(echo $IMAGE_BASE | tr '[:upper:]' '[:lower:]')
-          docker push $IMAGE_BASE:latest
-          docker push $IMAGE_BASE:${{ github.sha }}
