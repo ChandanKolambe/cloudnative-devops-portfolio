@@ -10,7 +10,7 @@
 ![Kubernetes](https://img.shields.io/badge/kubernetes-ready-blue)
 ![Helm](https://img.shields.io/badge/helm-ready-blue)
 
-**A compact, professional portfolio repository demonstrating a progression from backend fundamentals to production-grade DevOps: FastAPI, SQLAlchemy, Docker, CI/CD, Helm-native Kubernetes deployments, Prometheus/Grafana observability, and security-first infrastructure automation.**
+**A compact, professional portfolio repository demonstrating a progression from backend fundamentals to production-grade DevOps: FastAPI, SQLAlchemy, Docker, CI/CD, Terraform, Helm-native Kubernetes deployments, Prometheus/Grafana observability, and security-first infrastructure automation.**
 
 ---
 
@@ -38,6 +38,8 @@ This repository documents a step‑by‑step learning and implementation path. E
 
 * **Orchestration**: Helm-native Kubernetes deployment on Kind with Helm charts for infra, app, and monitoring
 
+* **Infrastructure as Code**: Terraform foundation with local validation and an AWS provider placeholder; see [terraform/README.md](terraform/README.md)
+
 * **Storage**: Kubernetes PersistentVolumes (PV), PersistentVolumeClaims (PVC), StatefulSets
 
 * **Cluster Security**: Namespace-level Pod Security Standards (Baseline profile), explicit non-root SecurityContext configuration (UID 999/10001), dropped Linux capabilities (`ALL`), RuntimeDefault seccomp profiles, and least-privilege zero-trust microsegmentation via native Kubernetes NetworkPolicies.
@@ -48,7 +50,7 @@ This repository documents a step‑by‑step learning and implementation path. E
   
 * **CI/CD**: GitHub Actions (build, security scan, tests)
   
-* **Docs**: README (high level) + GitHub Wiki (detailed evidence per day)
+* **Docs**: README (high level), Terraform commands in [docs/day25-terraform.md](docs/day25-terraform.md), and GitHub Wiki (detailed evidence per day)
   
 
 This README is intentionally concise. Detailed day‑by‑day evidence, logs, and screenshots live in the project **Wiki**.
@@ -75,6 +77,8 @@ This README is intentionally concise. Detailed day‑by‑day evidence, logs, an
 * Docker, docker‑compose, Kubernetes (Kind), GitHub Actions, Trivy (security scan)
 
 * Kubernetes (Kind) with Helm charts for infra, app, monitoring, and storage (PVs, PVCs, StatefulSets)
+
+* Terraform (local provider; AWS provider reserved for future infrastructure)
   
 * Prometheus, Grafana (monitoring)
   
