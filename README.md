@@ -240,7 +240,7 @@ Images are automatically scanned with Trivy during CI/CD to detect vulnerabiliti
 
 This project includes a `devcontainer.json` and `.devcontainer/setup.sh` that automatically:
 
-- Installs `kubectl`, `kind`, and `helm`
+- Installs `kubectl`, `kind`, `helm`, and `terraform`
 - Creates a local KinD cluster (`cloudnative-cluster`)
 - Deploys Helm charts from `charts/infra`, `charts/fastapi`, and `charts/monitoring`
 - Installs `ingress-nginx`, `cert-manager`, and `metrics-server` via Helm
