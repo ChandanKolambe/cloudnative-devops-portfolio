@@ -246,6 +246,7 @@ This project includes a `devcontainer.json` and `.devcontainer/setup.sh` that au
 - Installs `ingress-nginx`, `cert-manager`, and `metrics-server` via Helm
 - Starts local port-forwarding for FastAPI, Prometheus, Grafana, and HTTPS access
 - Namespace isolation (`cloudnative-devops`)
+- Terraform-managed namespace with configurable labels and outputs
 - Enforces Pod Security Standards (Baseline profile) with strict warning profiles
 - Binds workloads via native NetworkPolicies to prevent unauthorized cross-pod traffic
 - RBAC with `fastapi-sa` ServiceAccount
@@ -336,6 +337,7 @@ curl http://localhost:8000/users/
 * pytest (lightweight or CI‑safe tests)
   
 * Helm linting and chart rendering for the infra, application, and monitoring charts
+* Terraform formatting and configuration validation
   
 **Notes**
 
