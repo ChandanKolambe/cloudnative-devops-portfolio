@@ -3,7 +3,7 @@ set -euo pipefail
 
 echo "=== Initialising Kubernetes infrastructure ==="
 
-for tool in docker kind kubectl helm; do
+for tool in docker kind kubectl helm terraform; do
   if ! command -v "$tool" >/dev/null 2>&1; then
     echo "ERROR: required tool '$tool' is not installed."
     exit 1
@@ -54,6 +54,21 @@ fi
 
 echo "Kubernetes is ready."
 
+echo "=== Managing cloudnative-devops namespace with Terraform ==="
+terraform -chdir=terraform init -input=false
+terraform -chdir=terraform fmt -check
+terraform -chdir=terraform validate
+
+if kubectl get namespace cloudnative-devops >/dev/null 2>&1; then
+  terraform -chdir=terraform import \
+    -input=false \
+    kubernetes_namespace_v1.cloudnative_devops cloudnative-devops \
+    >/dev/null 2>&1 || true
+fi
+
+terraform -chdir=terraform plan -out=/tmp/day26-namespace.tfplan
+terraform -chdir=terraform apply -input=false /tmp/day26-namespace.tfplan
+
 add_helm_repos() {
   helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx --force-update >/dev/null 2>&1 || true
   helm repo add jetstack https://charts.jetstack.io --force-update >/dev/null 2>&1 || true
@@ -90,18 +105,6 @@ install_metrics_server() {
     --namespace kube-system --create-namespace \
     --wait --rollback-on-failure --timeout=5m \
     --set args={"--kubelet-insecure-tls"}
-}
-
-ensure_namespace() {
-  local ns="$1"
-  if ! kubectl get namespace "$ns" >/dev/null 2>&1; then
-    kubectl create namespace "$ns"
-  fi
-  
-  echo "Applying Pod Security Standards to $ns..."
-  #kubectl label namespace "$ns" pod-security.kubernetes.io/enforce=baseline --overwrite
-  #kubectl label namespace "$ns" pod-security.kubernetes.io/warn=restricted --overwrite
-  kubectl label namespace "$ns" pod-security.kubernetes.io/enforce=baseline pod-security.kubernetes.io/warn=restricted --overwrite
 }
 
 cat > /tmp/k8s-port-forward.sh <<'EOF'
@@ -150,8 +153,6 @@ add_helm_repos
 install_cert_manager
 install_ingress_nginx
 install_metrics_server
-
-ensure_namespace cloudnative-devops
 
 echo "=== Preparing local storage paths for hostPath volumes ==="
 for node in $(kind get nodes --name cloudnative-cluster 2>/dev/null || true); do

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented here.  
 This project follows [Semantic Versioning](https://semver.org/).
 
+## [v0.27.0] - 2026-08-29
+### Day 26 - Local Kubernetes Namespace Management
+- Fixed the CI pipeline by installing Terraform explicitly before validation runs.
+- Configured the Kubernetes Terraform provider for the local KinD cluster.
+- Added Terraform variables for the namespace name, labels, kubeconfig path, and context.
+- Managed the `cloudnative-devops` namespace with Terraform and exposed namespace outputs.
+- Updated Codespaces setup to validate, plan, and apply the Terraform namespace before Helm deployments.
+- Added CI validation for Terraform formatting and configuration.
+
+---
+
 ## [v0.26.0] - 2026-08-27
 ### Day 25 - Terraform Introduction and CI Publishing Fix
 - Added a Terraform foundation with constrained `local` and placeholder AWS providers.
