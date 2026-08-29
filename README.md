@@ -38,7 +38,7 @@ This repository documents a step‑by‑step learning and implementation path. E
 
 * **Orchestration**: Helm-native Kubernetes deployment on Kind with Helm charts for infra, app, and monitoring
 
-* **Infrastructure as Code**: Terraform foundation with local validation and an AWS provider placeholder; see [terraform/README.md](terraform/README.md)
+* **Infrastructure as Code**: Terraform foundation with local Kubernetes namespace management for Kind, plus an AWS provider placeholder; see [terraform/README.md](terraform/README.md)
 
 * **Storage**: Kubernetes PersistentVolumes (PV), PersistentVolumeClaims (PVC), StatefulSets
 
@@ -240,12 +240,13 @@ Images are automatically scanned with Trivy during CI/CD to detect vulnerabiliti
 
 This project includes a `devcontainer.json` and `.devcontainer/setup.sh` that automatically:
 
-- Installs `kubectl`, `kind`, and `helm`
+- Installs `kubectl`, `kind`, `helm`, and `terraform`
 - Creates a local KinD cluster (`cloudnative-cluster`)
 - Deploys Helm charts from `charts/infra`, `charts/fastapi`, and `charts/monitoring`
 - Installs `ingress-nginx`, `cert-manager`, and `metrics-server` via Helm
 - Starts local port-forwarding for FastAPI, Prometheus, Grafana, and HTTPS access
 - Namespace isolation (`cloudnative-devops`)
+- Terraform-managed namespace with configurable labels and outputs
 - Enforces Pod Security Standards (Baseline profile) with strict warning profiles
 - Binds workloads via native NetworkPolicies to prevent unauthorized cross-pod traffic
 - RBAC with `fastapi-sa` ServiceAccount
@@ -336,6 +337,7 @@ curl http://localhost:8000/users/
 * pytest (lightweight or CI‑safe tests)
   
 * Helm linting and chart rendering for the infra, application, and monitoring charts
+* Terraform formatting and configuration validation
   
 **Notes**
 

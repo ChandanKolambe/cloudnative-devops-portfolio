@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: ghcr.io/chandankolambe/cloudnative-devops-portfolio/app
-  tag: "0.24.0"
+  tag: "latest"
   pullPolicy: IfNotPresent
 
 serviceAccountName: fastapi-sa
