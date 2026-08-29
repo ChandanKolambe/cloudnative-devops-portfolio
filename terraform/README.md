@@ -25,3 +25,7 @@ The Kubernetes provider uses `~/.kube/config` and the
 `kube_context`, `namespace_name`, or `namespace_labels` with `-var` when
 needed. The initialization command updates `.terraform.lock.hcl`, which must
 be committed to keep provider selections reproducible.
+
+GitHub Actions now installs Terraform explicitly before validation so the CI
+job remains deterministic and does not depend on the runner image having the
+provider preinstalled.

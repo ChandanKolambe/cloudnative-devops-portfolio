@@ -38,6 +38,9 @@ The Kubernetes provider now manages the `cloudnative-devops` namespace in the
 local KinD cluster. Namespace naming and labels are configurable Terraform
 variables, and the namespace name, labels, and UID are exposed as outputs.
 
+The CI workflow also installs Terraform explicitly before validation so the
+release pipeline remains stable on GitHub-hosted runners.
+
 ## Commands
 
 ```bash

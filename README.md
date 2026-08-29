@@ -38,7 +38,7 @@ This repository documents a step‑by‑step learning and implementation path. E
 
 * **Orchestration**: Helm-native Kubernetes deployment on Kind with Helm charts for infra, app, and monitoring
 
-* **Infrastructure as Code**: Terraform foundation with local validation and an AWS provider placeholder; see [terraform/README.md](terraform/README.md)
+* **Infrastructure as Code**: Terraform foundation with local Kubernetes namespace management for Kind, plus an AWS provider placeholder; see [terraform/README.md](terraform/README.md)
 
 * **Storage**: Kubernetes PersistentVolumes (PV), PersistentVolumeClaims (PVC), StatefulSets
 
